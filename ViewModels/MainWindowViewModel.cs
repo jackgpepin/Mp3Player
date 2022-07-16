@@ -8,6 +8,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using LibVLCSharp.Shared;
+using Mp3Player.Enums;
 using ReactiveUI;
 
 namespace Mp3Player.ViewModels
@@ -48,11 +49,36 @@ namespace Mp3Player.ViewModels
         
         private float _position;
         public float Position
-        {
+        {                
+
             get => _position;
-            set => this.RaiseAndSetIfChanged(ref _position, value);
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _position, value);
+                if (Position != SelectedMusic.MPlayer.Position)
+                    SelectedMusic.MPlayer.Position = Position;
+            }
+        }
+
+        private PlayerStatus _status = PlayerStatus.Paused;
+
+        public PlayerStatus Status
+        {
+            get => _status;
+            set => this.RaiseAndSetIfChanged(ref _status, value);
         }
         
+        private int _volume;
+        public int Volume
+        {
+            get => _volume;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _volume, value);
+                if (Volume != SelectedMusic.MPlayer.Volume)
+                    SelectedMusic.MPlayer.Volume = Volume;
+            }
+        }
         private LibVLC _libVlc;
         private Media _media;
         public Media ActualMedia
@@ -85,16 +111,23 @@ namespace Mp3Player.ViewModels
             get => _selectedMusic;
             set
             {
-                if(SelectedMusic != null)
+                if(SelectedMusic != null && SelectedMusic.MPlayer.IsPlaying)
                     SelectedMusic.MPlayer.Stop();
                 this.RaiseAndSetIfChanged(ref _selectedMusic, value);
                 SelectedMusic.MPlayer.PositionChanged += (sender, args) =>
                 {
-                    Position = ((SelectedMusic.MPlayer.Position * 100) / 1);
+                    //Position = ((SelectedMusic.MPlayer.Position * 100) / 1);
+                    Position = SelectedMusic.MPlayer.Position;
                     var time = TimeSpan.FromMilliseconds(SelectedMusic.MPlayer.Time);
                     ActualTime.SetActual(time);
                 };
-                SelectedMusic.MPlayer.EndReached += (sender, args) => NextCommand.Execute();
+                SelectedMusic.MPlayer.EndReached += (sender, args) =>
+                {
+                    NextCommand.Execute();
+                };
+                SelectedMusic.MPlayer.Playing += (sender, args) => Status = PlayerStatus.Playing;
+                SelectedMusic.MPlayer.Paused += (sender, args) => Status = PlayerStatus.Paused;
+                SelectedMusic.MPlayer.Stopped += (sender, args) => Status = PlayerStatus.Paused;
             }
         }
 

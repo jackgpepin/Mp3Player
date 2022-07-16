@@ -3,6 +3,7 @@
         xmlns:vm="using:Mp3Player.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:cnv="using:Mp3Player.Converters"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Mp3Player.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
@@ -11,6 +12,9 @@
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
+    <Window.Resources>
+        <cnv:PlayAndPauseConverter x:Key="PlayAndPauseConverter"/>
+    </Window.Resources>
     <Window.ContextMenu>
         
     </Window.ContextMenu>
@@ -27,9 +31,9 @@
         <Button Content="Pause" Command="{Binding PauseCommand}"/>
         <Button Content="Stop" Command="{Binding StopCommand}"/>
         <Button Content="Restart" Command="{Binding RestartCommand}"/>-->
-        <Menu >
-            <MenuItem Header="File" Width="100">
-               <MenuItem Header="Open" Command="{Binding OpenFileCommand}"></MenuItem>
+        <Menu Background="#111">
+            <MenuItem Header="File">
+               <MenuItem Width="150" Header="Open" Command="{Binding OpenFileCommand}"></MenuItem>
                 <MenuItem Header="Exit" Click="MenuItem_ExitOnClick"></MenuItem>
             </MenuItem>
         </Menu>
@@ -62,18 +66,42 @@
                     <Image Width="20" Source="/Assets/prev.png"></Image>
                 </Button>
                 <Button Background="Transparent" Command="{Binding PlayCommand}">
-                    <Image Width="20" Source="/Assets/play.png"></Image>
+                    <Image Width="20" Source="{Binding Status,Converter={StaticResource PlayAndPauseConverter}}"></Image>
                 </Button>
+               
                 <Button Background="Transparent" Command="{Binding NextCommand}">
                     <Image Width="20" Source="/Assets/next.png"></Image>
                 </Button>
             </WrapPanel>
     
-            <WrapPanel HorizontalAlignment="Center" >
-                <TextBlock Text="{Binding ActualTime.Formated}"/>
-                <ProgressBar  MinWidth="300" Margin="5,0,5,0" Value="{Binding Position}"/>
-                <TextBlock Text="{Binding  SelectedMusic.Duration.Formated}"/>
-            </WrapPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="200"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="1" HorizontalAlignment="Center" >
+                    <Grid.ColumnDefinitions>
+                    
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="70"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding ActualTime.Formated}"/>
+                    <!--<ProgressBar  MinWidth="300" Margin="5,0,5,0" Value="{Binding Position}"/>
+               --> 
+                    <Slider Maximum="1" Value="{Binding Position}" Margin="0,-20,12,0" Grid.Column="1" Width="300"></Slider>
+                    <TextBlock Grid.Column="2" Text="{Binding  SelectedMusic.Duration.Formated}"/>
+                </Grid>
+                <Grid Grid.Column="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Image  Margin="80,-15,0,0" Source="/Assets/volume.png" Width="20"/>
+                    <Slider Maximum="100" Grid.Column="1" Value="{Binding Volume}" Width="80" Margin="0,-20,0,0"></Slider>
+                </Grid>
+            </Grid>
         </StackPanel>
     </Grid>
 </Window>
