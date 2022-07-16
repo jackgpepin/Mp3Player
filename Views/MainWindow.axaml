@@ -1,0 +1,79 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Mp3Player.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Mp3Player.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Mp3Player">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+    <Window.ContextMenu>
+        
+    </Window.ContextMenu>
+    
+    <Grid>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="80"/>
+        </Grid.RowDefinitions>
+        <!--<TextBlock HorizontalAlignment="Center" Text="{Binding Title}"/>
+        <Button Content="Play" Command="{Binding PlayCommand}"/>
+        <Button Content="Pause" Command="{Binding PauseCommand}"/>
+        <Button Content="Stop" Command="{Binding StopCommand}"/>
+        <Button Content="Restart" Command="{Binding RestartCommand}"/>-->
+        <Menu >
+            <MenuItem Header="File" Width="100">
+               <MenuItem Header="Open" Command="{Binding OpenFileCommand}"></MenuItem>
+                <MenuItem Header="Exit" Click="MenuItem_ExitOnClick"></MenuItem>
+            </MenuItem>
+        </Menu>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <StackPanel >
+                
+            </StackPanel>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock HorizontalAlignment="Center">Lista de musicas</TextBlock>
+                <DataGrid Grid.Row="1" SelectedItem="{Binding SelectedMusic}" Items="{Binding Musics}" DoubleTapped="InputElement_OnDoubleTapped" IsReadOnly="True" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Duration" Binding="{Binding Duration.Formated}"/>
+                        <DataGridTextColumn Header="Title" Binding="{Binding Title}"/>
+                        <DataGridTextColumn Header="Path" Binding="{Binding Path}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+        <StackPanel Grid.Row="2" VerticalAlignment="Center">
+            <WrapPanel HorizontalAlignment="Center" >
+                <Button Background="Transparent" Command="{Binding PreviousCommand}">
+                    <Image Width="20" Source="/Assets/prev.png"></Image>
+                </Button>
+                <Button Background="Transparent" Command="{Binding PlayCommand}">
+                    <Image Width="20" Source="/Assets/play.png"></Image>
+                </Button>
+                <Button Background="Transparent" Command="{Binding NextCommand}">
+                    <Image Width="20" Source="/Assets/next.png"></Image>
+                </Button>
+            </WrapPanel>
+    
+            <WrapPanel HorizontalAlignment="Center" >
+                <TextBlock Text="{Binding ActualTime.Formated}"/>
+                <ProgressBar  MinWidth="300" Margin="5,0,5,0" Value="{Binding Position}"/>
+                <TextBlock Text="{Binding  SelectedMusic.Duration.Formated}"/>
+            </WrapPanel>
+        </StackPanel>
+    </Grid>
+</Window>
