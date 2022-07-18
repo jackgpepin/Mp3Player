@@ -7,11 +7,14 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Mp3Player.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Mp3Player">
+        Title="Mp3Player"
+        DragDrop.AllowDrop="True"
+        >
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
+    
     <Window.Resources>
         <cnv:PlayAndPauseConverter x:Key="PlayAndPauseConverter"/>
     </Window.Resources>
@@ -19,8 +22,7 @@
         
     </Window.ContextMenu>
     
-    <Grid>
-        
+    <Grid Background="#191919">
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
             <RowDefinition Height="*"/>
@@ -31,7 +33,7 @@
         <Button Content="Pause" Command="{Binding PauseCommand}"/>
         <Button Content="Stop" Command="{Binding StopCommand}"/>
         <Button Content="Restart" Command="{Binding RestartCommand}"/>-->
-        <Menu Background="#111">
+        <Menu Background="Transparent">
             <MenuItem Header="File">
                <MenuItem Width="150" Header="Open" Command="{Binding OpenFileCommand}"></MenuItem>
                 <MenuItem Header="Exit" Click="MenuItem_ExitOnClick"></MenuItem>
@@ -51,12 +53,30 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <TextBlock HorizontalAlignment="Center">Lista de musicas</TextBlock>
-                <DataGrid Grid.Row="1" SelectedItem="{Binding SelectedMusic}" Items="{Binding Musics}" DoubleTapped="InputElement_OnDoubleTapped" IsReadOnly="True" AutoGenerateColumns="False">
+                <DataGrid SelectionChanged="DataGrid_OnSelectionChanged" ContextRequested="Control_OnContextRequested" Background="Transparent" DragDrop.AllowDrop="True"  Grid.Row="1" SelectedItem="{Binding SelectedMusic}" Items="{Binding Musics}" DoubleTapped="InputElement_OnDoubleTapped" IsReadOnly="True" AutoGenerateColumns="False">
+                   <DataGrid.Styles>
+                       <Style Selector="DataGridColumnHeader">
+                          <Setter Property="Background" Value="Transparent"/>
+                       </Style>
+                       <Style Selector="DataGridCell">
+                          <Setter Property="Background" Value="Transparent"/>
+                       </Style>
+                       
+                   </DataGrid.Styles>
+                    <DataGrid.ContextMenu>
+                        <ContextMenu Items="{Binding ContextMenuItems}">
+                            <!--<MenuItem Header="Play now" />
+                            <MenuItem Header="Pause" IsVisible="{Binding }"/>
+                            <MenuItem Header="Remove from list"/>-->
+                            
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Duration" Binding="{Binding Duration.Formated}"/>
+                        <DataGridTextColumn  Header="Duration" Binding="{Binding Duration.Formated}"/>
                         <DataGridTextColumn Header="Title" Binding="{Binding Title}"/>
                         <DataGridTextColumn Header="Path" Binding="{Binding Path}"/>
                     </DataGrid.Columns>
+                    
                 </DataGrid>
             </Grid>
         </Grid>

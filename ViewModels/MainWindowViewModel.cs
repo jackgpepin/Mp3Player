@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using LibVLCSharp.Shared;
 using Mp3Player.Enums;
 using ReactiveUI;
@@ -111,6 +112,7 @@ namespace Mp3Player.ViewModels
             get => _selectedMusic;
             set
             {
+                
                 if(SelectedMusic != null && SelectedMusic.MPlayer.IsPlaying)
                     SelectedMusic.MPlayer.Stop();
                 this.RaiseAndSetIfChanged(ref _selectedMusic, value);
@@ -128,6 +130,11 @@ namespace Mp3Player.ViewModels
                 SelectedMusic.MPlayer.Playing += (sender, args) => Status = PlayerStatus.Playing;
                 SelectedMusic.MPlayer.Paused += (sender, args) => Status = PlayerStatus.Paused;
                 SelectedMusic.MPlayer.Stopped += (sender, args) => Status = PlayerStatus.Paused;
+
+                if (SelectedMusic != null)
+                {
+                    ContextMenuItems = _setMusicListContextMenuItemsFromSelectedMusic();
+                }
             }
         }
 
@@ -149,14 +156,20 @@ namespace Mp3Player.ViewModels
              //ActualFileUri = new Uri("/home/denny/Music/a.mp3");
              PlayCommand = ReactiveCommand.CreateFromTask(async () =>
              {
+                 
                  if (SelectedMusic == null)
                  {
+                     
                      SelectedMusic = Musics.First();
                      //SelectedMusic?.Play();
                      SelectedMusic.MPlayer.Play();
                  }
                  else
                  {
+                     if (!SelectedMusic.MPlayer.CanPause)
+                     {
+                         SelectedMusic.Play();
+                     }
                      SelectedMusic.MPlayer.Pause();
                  }
                 _mediaPlayer?.Dispose();
@@ -232,6 +245,23 @@ namespace Mp3Player.ViewModels
                 SelectedMusic = musics.First();
                 SelectedMusic.Play();
             });
+            RemoveCommand = ReactiveCommand.CreateFromTask(async () =>
+            {
+                if (SelectedMusic == null) return;
+                Musics.Remove(SelectedMusic);
+            });
+            RemoveAllCommand = ReactiveCommand.CreateFromTask(async () =>
+            {
+                Musics.Clear();
+            });
+
+            PlayAllCommand = ReactiveCommand.CreateFromTask(async () =>
+            {
+                if (Musics.Count == 0) return;
+                SelectedMusic = Musics.First();
+                SelectedMusic.Play();
+            });
+            
             ShowOpenFileDialog = new Interaction<Unit, string[]>();
             
         }
@@ -240,6 +270,9 @@ namespace Mp3Player.ViewModels
             
         }
         public ReactiveCommand<Unit, Unit> PlayCommand { get; set; }
+        public ReactiveCommand<Unit, Unit> PlayAllCommand { get; set; }
+        public ReactiveCommand<Unit, Unit> RemoveCommand { get; set; }
+        public ReactiveCommand<Unit, Unit> RemoveAllCommand { get; set; }
         public ReactiveCommand<Unit, Unit> PauseCommand { get; set; }
         public ReactiveCommand<Unit, Unit> StopCommand { get; set; }
         public ReactiveCommand<Unit, Unit> RestartCommand { get; set; }
@@ -251,6 +284,49 @@ namespace Mp3Player.ViewModels
         public void DoubleClickMusic()
         {
             SelectMusicCommand.Execute();
+        }
+
+        private ObservableCollection<MenuItem> _contextMenuItems;
+
+        public ObservableCollection<MenuItem> ContextMenuItems
+        {
+            get => _contextMenuItems;
+            set => this.RaiseAndSetIfChanged(ref _contextMenuItems, value);
+        }
+
+        private  ObservableCollection<MenuItem> _setDefaultMusicListContextMenuItems()
+        {
+            Console.WriteLine("Generate context menu");
+            var items = new ObservableCollection<MenuItem>()
+            {
+                new MenuItem(){Header = "Play all", Command = PlayAllCommand},
+                new MenuItem(){Header = "Open file", Command = OpenFileCommand},
+                new MenuItem(){Header = "Open folder", IsEnabled = false},
+                new MenuItem(){Header = "Clear list", Command = RemoveAllCommand}
+            };
+
+            return items;
+        }
+
+        private ObservableCollection<MenuItem> _setMusicListContextMenuItemsFromSelectedMusic()
+        {
+            var items = new ObservableCollection<MenuItem>();
+            if(SelectedMusic.MPlayer.IsPlaying)
+                items.Add(new MenuItem(){Header = "Pause", Command = PlayCommand});
+            else
+                items.Add(new MenuItem(){Header = "Play", Command = PlayCommand});
+            
+            items.Add(new MenuItem(){Header = "Remove from list", Command = RemoveCommand});
+
+            return items;
+        }
+
+        public void ShowContextMenu()
+        {
+            if (SelectedMusic == null)
+                ContextMenuItems = _setDefaultMusicListContextMenuItems();
+            else
+                ContextMenuItems = _setMusicListContextMenuItemsFromSelectedMusic();
         }
     }
 }
