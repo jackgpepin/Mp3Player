@@ -142,17 +142,26 @@ namespace Mp3Player.ViewModels
 
         public MainWindowViewModel()
         {
-            _libVlc = new LibVLC(enableDebugLogs:true);
-            Musics = new ObservableCollection<MusicViewModel>()
-            {
-                new MusicViewModel("/home/denny/Music/a.mp3", _libVlc),
-                new MusicViewModel("/home/denny/Music/VEDZ.m4a", _libVlc),
-                new MusicViewModel("/home/denny/Music/VEDZ.m4a", _libVlc),
-                new MusicViewModel("/home/denny/Music/VEDZ.m4a", _libVlc)
-
-
-            };
+            var args = Environment.GetCommandLineArgs();
             
+            _libVlc = new LibVLC(enableDebugLogs:true);
+            Musics = new ObservableCollection<MusicViewModel>();
+
+            if (args != null)
+            {
+                foreach (var arg in args)
+                {
+                    if (arg.EndsWith(".mp3") || arg.EndsWith("mp4") || arg.EndsWith(("wav")) || arg.EndsWith(("ogg")))
+                    {
+                        MusicViewModel music = null;
+                        try{
+                            music = new MusicViewModel(arg, _libVlc);
+                            Musics.Add(music);
+                        }catch(Exception e){}
+                        
+                    }
+                }
+            }
              //ActualFileUri = new Uri("/home/denny/Music/a.mp3");
              PlayCommand = ReactiveCommand.CreateFromTask(async () =>
              {
