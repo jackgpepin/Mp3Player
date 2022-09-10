@@ -53,7 +53,6 @@ public class MusicViewModel:ViewModelBase
         _media.MetaChanged += (sender, args) =>
         {
             Title = _media.Meta(MetadataType.Title);
-            
         };
         MPlayer.LengthChanged += (sender, args) =>
         {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reactive;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -7,6 +8,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.ReactiveUI;
+using Avalonia.Styling;
 using Mp3Player.ViewModels;
 using ReactiveUI;
 
@@ -38,8 +40,6 @@ namespace Mp3Player.Views
             this.Close();
             
         }
-
-
         private void Control_OnContextRequested(object? sender, ContextRequestedEventArgs e)
         {
             ((MainWindowViewModel) this.DataContext).ShowContextMenu();
@@ -48,7 +48,11 @@ namespace Mp3Player.Views
 
         private void DataGrid_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
-            
+            Console.WriteLine(e);  
+        }
+
+        private void DataGrid_OnLoadingRow(object? sender, DataGridRowEventArgs e)
+        {
         }
     }
 }

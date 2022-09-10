@@ -56,8 +56,8 @@ namespace Mp3Player.ViewModels
             set
             {
                 this.RaiseAndSetIfChanged(ref _position, value);
-                if (Position != SelectedMusic.MPlayer.Position)
-                    SelectedMusic.MPlayer.Position = Position;
+                if (Position != SelectedPlayingMusic.MPlayer.Position)
+                    SelectedPlayingMusic.MPlayer.Position = Position;
             }
         }
 
@@ -76,8 +76,8 @@ namespace Mp3Player.ViewModels
             set
             {
                 this.RaiseAndSetIfChanged(ref _volume, value);
-                if (Volume != SelectedMusic.MPlayer.Volume)
-                    SelectedMusic.MPlayer.Volume = Volume;
+                if (Volume != SelectedPlayingMusic.MPlayer.Volume)
+                    SelectedPlayingMusic.MPlayer.Volume = Volume;
             }
         }
         private LibVLC _libVlc;
@@ -105,37 +105,44 @@ namespace Mp3Player.ViewModels
             set => this.RaiseAndSetIfChanged(ref _musics, value);
         }
 
-        private MusicViewModel _selectedMusic;
+        private MusicViewModel _selectedPlayingMusic;
 
-        public MusicViewModel SelectedMusic
+        public MusicViewModel SelectedPlayingMusic
         {
-            get => _selectedMusic;
+            get => _selectedPlayingMusic;
             set
             {
-                
-                if(SelectedMusic != null && SelectedMusic.MPlayer.IsPlaying)
-                    SelectedMusic.MPlayer.Stop();
-                this.RaiseAndSetIfChanged(ref _selectedMusic, value);
-                SelectedMusic.MPlayer.PositionChanged += (sender, args) =>
+                if(SelectedPlayingMusic != null && SelectedPlayingMusic.MPlayer.IsPlaying)
+                    SelectedPlayingMusic.MPlayer.Stop();
+                this.RaiseAndSetIfChanged(ref _selectedPlayingMusic, value);
+                SelectedMusic = SelectedPlayingMusic;
+                SelectedPlayingMusic.MPlayer.PositionChanged += (sender, args) =>
                 {
                     //Position = ((SelectedMusic.MPlayer.Position * 100) / 1);
-                    Position = SelectedMusic.MPlayer.Position;
-                    var time = TimeSpan.FromMilliseconds(SelectedMusic.MPlayer.Time);
+                    Position = SelectedPlayingMusic.MPlayer.Position;
+                    var time = TimeSpan.FromMilliseconds(SelectedPlayingMusic.MPlayer.Time);
                     ActualTime.SetActual(time);
                 };
-                SelectedMusic.MPlayer.EndReached += (sender, args) =>
+                SelectedPlayingMusic.MPlayer.EndReached += (sender, args) =>
                 {
                     NextCommand.Execute();
                 };
-                SelectedMusic.MPlayer.Playing += (sender, args) => Status = PlayerStatus.Playing;
-                SelectedMusic.MPlayer.Paused += (sender, args) => Status = PlayerStatus.Paused;
-                SelectedMusic.MPlayer.Stopped += (sender, args) => Status = PlayerStatus.Paused;
+                SelectedPlayingMusic.MPlayer.Playing += (sender, args) => Status = PlayerStatus.Playing;
+                SelectedPlayingMusic.MPlayer.Paused += (sender, args) => Status = PlayerStatus.Paused;
+                SelectedPlayingMusic.MPlayer.Stopped += (sender, args) => Status = PlayerStatus.Paused;
 
-                if (SelectedMusic != null)
+                if (SelectedPlayingMusic != null)
                 {
                     ContextMenuItems = _setMusicListContextMenuItemsFromSelectedMusic();
                 }
             }
+        }
+        
+        private MusicViewModel _selectedMusic;
+        public MusicViewModel SelectedMusic
+        {
+            get => _selectedMusic;
+            set => this.RaiseAndSetIfChanged(ref _selectedMusic, value);
         }
 
         
@@ -143,10 +150,20 @@ namespace Mp3Player.ViewModels
         public MainWindowViewModel()
         {
             var args = Environment.GetCommandLineArgs();
+        
             
-            _libVlc = new LibVLC(enableDebugLogs:true);
-            Musics = new ObservableCollection<MusicViewModel>();
-
+            try
+            {
+                _libVlc = new LibVLC(enableDebugLogs: true);
+                Musics = new ObservableCollection<MusicViewModel>()
+                {
+                };
+            }
+            catch (Exception e)
+            {
+                
+            }
+            Console.WriteLine("");
             if (args != null)
             {
                 foreach (var arg in args)
@@ -158,7 +175,6 @@ namespace Mp3Player.ViewModels
                             music = new MusicViewModel(arg, _libVlc);
                             Musics.Add(music);
                         }catch(Exception e){}
-                        
                     }
                 }
             }
@@ -166,20 +182,20 @@ namespace Mp3Player.ViewModels
              PlayCommand = ReactiveCommand.CreateFromTask(async () =>
              {
                  
-                 if (SelectedMusic == null)
+                 if (SelectedPlayingMusic == null)
                  {
                      
-                     SelectedMusic = Musics.First();
+                     SelectedPlayingMusic = Musics.First();
                      //SelectedMusic?.Play();
-                     SelectedMusic.MPlayer.Play();
+                     SelectedPlayingMusic.MPlayer.Play();
                  }
                  else
                  {
-                     if (!SelectedMusic.MPlayer.CanPause)
+                     if (!SelectedPlayingMusic.MPlayer.CanPause)
                      {
-                         SelectedMusic.Play();
+                         SelectedPlayingMusic.Play();
                      }
-                     SelectedMusic.MPlayer.Pause();
+                     SelectedPlayingMusic.MPlayer.Pause();
                  }
                 _mediaPlayer?.Dispose();
                 /*ActualMedia = new Media(_libVlc, ActualFileUri);
@@ -215,25 +231,34 @@ namespace Mp3Player.ViewModels
                 //_mediaPlayer = SelectedMusic.MPlayer;
                 //_mediaPlayer.Play();
                 //SelectedMusic.MPlayer.Play(SelectedMusic.MPlayer.Media);
-                SelectedMusic.Play();
+                SelectedPlayingMusic = SelectedMusic;
+                SelectedPlayingMusic.Play();
             });
             PreviousCommand = ReactiveCommand.CreateFromTask(async () =>
             {
                 int index = Musics.ToList().IndexOf(SelectedMusic);
                 if ((index - 1) <= Musics.Count)
                 {
-                    SelectedMusic = Musics[index-1];
-                    SelectedMusic.Play();
+                    SelectedPlayingMusic = Musics[index-1];
+                    SelectedPlayingMusic.Play();
                 }
                 
             });
             NextCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                int index = Musics.ToList().IndexOf(SelectedMusic);
+                
+                int index = Musics.ToList().IndexOf(SelectedPlayingMusic);
                 if ((index + 1) <= Musics.Count)
                 {
-                    SelectedMusic = Musics[index+1];
-                    SelectedMusic.Play();
+                    SelectedPlayingMusic = Musics[index+1];
+                    if(SelectedPlayingMusic.MPlayer.WillPlay)
+                        SelectedPlayingMusic.Play();
+                    else
+                    {
+                        Debug.WriteLine("Cant play");
+                        SelectedPlayingMusic.MPlayer = new MediaPlayer(_libVlc);
+                        SelectedPlayingMusic.Play();
+                    }
                 }
             });
             OpenFileCommand = ReactiveCommand.CreateFromTask(async () =>
@@ -251,8 +276,8 @@ namespace Mp3Player.ViewModels
                     Musics.Add(music);
                 }
 
-                SelectedMusic = musics.First();
-                SelectedMusic.Play();
+                SelectedPlayingMusic = musics.First();
+                SelectedPlayingMusic.Play();
             });
             RemoveCommand = ReactiveCommand.CreateFromTask(async () =>
             {
@@ -268,9 +293,24 @@ namespace Mp3Player.ViewModels
             {
                 if (Musics.Count == 0) return;
                 SelectedMusic = Musics.First();
-                SelectedMusic.Play();
+                SelectedPlayingMusic.Play();
             });
-            
+            AddMusicCommand = ReactiveCommand.CreateFromTask(async () =>
+            {
+                string[] files = (await ShowOpenFileDialog.Handle(Unit.Default));
+                if (files == null) return;
+                List<MusicViewModel> musics = new List<MusicViewModel>();
+                foreach (var file in files)
+                {
+                    musics.Add(new MusicViewModel(file, _libVlc));
+                }
+
+                foreach (var music in musics)
+                {
+                    Musics.Add(music);
+                }
+
+            });
             ShowOpenFileDialog = new Interaction<Unit, string[]>();
             
         }
@@ -289,6 +329,7 @@ namespace Mp3Player.ViewModels
         public ReactiveCommand<Unit, Unit> PreviousCommand { get; set; }
         public ReactiveCommand<Unit, Unit> NextCommand { get; set; }
         public ReactiveCommand<Unit, Unit> OpenFileCommand { get; set; }
+        public ReactiveCommand<Unit, Unit> AddMusicCommand { get; set; }
         public Interaction<Unit, string[]> ShowOpenFileDialog { get; set; }
         public void DoubleClickMusic()
         {
@@ -311,7 +352,8 @@ namespace Mp3Player.ViewModels
                 new MenuItem(){Header = "Play all", Command = PlayAllCommand},
                 new MenuItem(){Header = "Open file", Command = OpenFileCommand},
                 new MenuItem(){Header = "Open folder", IsEnabled = false},
-                new MenuItem(){Header = "Clear list", Command = RemoveAllCommand}
+                new MenuItem(){Header = "Clear list", Command = RemoveAllCommand},
+                new MenuItem(){Header = "Add music", Command = AddMusicCommand}
             };
 
             return items;
@@ -320,7 +362,7 @@ namespace Mp3Player.ViewModels
         private ObservableCollection<MenuItem> _setMusicListContextMenuItemsFromSelectedMusic()
         {
             var items = new ObservableCollection<MenuItem>();
-            if(SelectedMusic.MPlayer.IsPlaying)
+            if(SelectedPlayingMusic.MPlayer.IsPlaying)
                 items.Add(new MenuItem(){Header = "Pause", Command = PlayCommand});
             else
                 items.Add(new MenuItem(){Header = "Play", Command = PlayCommand});

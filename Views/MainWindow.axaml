@@ -53,22 +53,35 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <TextBlock HorizontalAlignment="Center">Lista de musicas</TextBlock>
-                <DataGrid SelectionChanged="DataGrid_OnSelectionChanged" ContextRequested="Control_OnContextRequested" Background="Transparent" DragDrop.AllowDrop="True"  Grid.Row="1" SelectedItem="{Binding SelectedMusic}" Items="{Binding Musics}" DoubleTapped="InputElement_OnDoubleTapped" IsReadOnly="True" AutoGenerateColumns="False">
+                
+                <DataGrid 
+                    LoadingRow="DataGrid_OnLoadingRow"
+                    SelectionChanged="DataGrid_OnSelectionChanged"
+                    ContextRequested="Control_OnContextRequested"
+                    Background="Transparent" 
+                    DragDrop.AllowDrop="True" 
+                    Grid.Row="1" 
+                    SelectedItem="{Binding SelectedMusic}"
+                    Items="{Binding Musics}"
+                    DoubleTapped="InputElement_OnDoubleTapped" 
+                    IsReadOnly="True" AutoGenerateColumns="False">
                    <DataGrid.Styles>
-                       <Style Selector="DataGridColumnHeader">
-                          <Setter Property="Background" Value="Transparent"/>
-                       </Style>
-                       <Style Selector="DataGridCell">
-                          <Setter Property="Background" Value="Transparent"/>
-                       </Style>
                        
+                       <Style Selector="DataGridColumnHeader">
+                           <Setter Property="Background" Value="Transparent"/>
+                       </Style>
+                       <Style Selector="DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
+                           <Setter Property="Fill" Value="gray"/>
+                       </Style>
+                       <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
+                           <Setter Property="Fill" Value="#333"/>
+                       </Style>
                    </DataGrid.Styles>
                     <DataGrid.ContextMenu>
                         <ContextMenu Items="{Binding ContextMenuItems}">
                             <!--<MenuItem Header="Play now" />
                             <MenuItem Header="Pause" IsVisible="{Binding }"/>
                             <MenuItem Header="Remove from list"/>-->
-                            
                         </ContextMenu>
                     </DataGrid.ContextMenu>
                     <DataGrid.Columns>
@@ -111,7 +124,7 @@
                     <!--<ProgressBar  MinWidth="300" Margin="5,0,5,0" Value="{Binding Position}"/>
                --> 
                     <Slider Maximum="1" Value="{Binding Position}" Margin="0,-20,12,0" Grid.Column="1" Width="300"></Slider>
-                    <TextBlock Grid.Column="2" Text="{Binding  SelectedMusic.Duration.Formated}"/>
+                    <TextBlock Grid.Column="2" Text="{Binding  SelectedPlayingMusic.Duration.Formated}"/>
                 </Grid>
                 <Grid Grid.Column="2">
                     <Grid.ColumnDefinitions>
