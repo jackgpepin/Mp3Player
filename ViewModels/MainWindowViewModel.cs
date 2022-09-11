@@ -181,7 +181,6 @@ namespace Mp3Player.ViewModels
             //ActualFileUri = new Uri("/home/denny/Music/a.mp3");
             PlayCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                 
                 if (SelectedPlayingMusic == null)
                 {
                      
@@ -236,8 +235,8 @@ namespace Mp3Player.ViewModels
             });
             PreviousCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                int index = Musics.ToList().IndexOf(SelectedMusic);
-                if ((index - 1) <= Musics.Count)
+                int index = Musics.ToList().IndexOf(SelectedPlayingMusic);
+                if ((index - 1) <= Musics.Count && index - 1 >=0)
                 {
                     SelectedPlayingMusic = Musics[index-1];
                     SelectedPlayingMusic.Play();
@@ -247,8 +246,8 @@ namespace Mp3Player.ViewModels
             NextCommand = ReactiveCommand.CreateFromTask(async () =>
             {
                 
-                int index = Musics.ToList().IndexOf(SelectedMusic);
-                if ((index + 1) <= Musics.Count)
+                int index = Musics.ToList().IndexOf(SelectedPlayingMusic);
+                if ((index + 2) <= Musics.Count)
                 {
                     SelectedPlayingMusic = Musics[index+1];
                     SelectedPlayingMusic.Play();
