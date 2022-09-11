@@ -1,7 +1,9 @@
 using System;
 using System.Globalization;
+using Avalonia;
 using Avalonia.Data.Converters;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using LibVLCSharp.Shared;
 using Mp3Player.Enums;
 
@@ -11,21 +13,24 @@ public class PlayAndPauseConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
+        var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
+        var path = string.Empty;
         Bitmap btmp = null;
         var v = (PlayerStatus) value;
         switch (v)
         {
             case PlayerStatus.Playing:
-                btmp = new Bitmap("pause.png");
+                path = "pause.png";
                 break;
             case PlayerStatus.Paused:
-                btmp = new Bitmap("play.png");
+                path = "play.png";
                 break;
             default:
-                btmp = new Bitmap("play.png");
+                path = "play.png";
                 break;
         }
 
+        btmp = new Bitmap(assets.Open(new Uri(@"avares://Mp3Player/Assets/" + path)));
         return btmp;
     }
 

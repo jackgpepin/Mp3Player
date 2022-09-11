@@ -24,6 +24,14 @@ namespace Mp3Player.Views
         
         private void InputElement_OnDoubleTapped(object? sender, RoutedEventArgs e)
         {
+            if (e.Source.GetType() == typeof(Border))
+            {
+                var datagrid = sender as DataGrid;
+                datagrid.SelectedItem = null;
+                datagrid.SelectedIndex = -1;
+                return;
+            };
+            
             ((MainWindowViewModel) this.DataContext).DoubleClickMusic();
         }
 

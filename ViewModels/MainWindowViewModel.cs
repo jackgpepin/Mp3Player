@@ -178,25 +178,25 @@ namespace Mp3Player.ViewModels
                     }
                 }
             }
-             //ActualFileUri = new Uri("/home/denny/Music/a.mp3");
-             PlayCommand = ReactiveCommand.CreateFromTask(async () =>
-             {
+            //ActualFileUri = new Uri("/home/denny/Music/a.mp3");
+            PlayCommand = ReactiveCommand.CreateFromTask(async () =>
+            {
                  
-                 if (SelectedPlayingMusic == null)
-                 {
+                if (SelectedPlayingMusic == null)
+                {
                      
-                     SelectedPlayingMusic = Musics.First();
-                     //SelectedMusic?.Play();
-                     SelectedPlayingMusic.MPlayer.Play();
-                 }
-                 else
-                 {
-                     if (!SelectedPlayingMusic.MPlayer.CanPause)
-                     {
-                         SelectedPlayingMusic.Play();
-                     }
-                     SelectedPlayingMusic.MPlayer.Pause();
-                 }
+                    SelectedPlayingMusic = Musics.First();
+                    //SelectedMusic?.Play();
+                    SelectedPlayingMusic.MPlayer.Play();
+                }
+                else
+                {
+                    if (!SelectedPlayingMusic.MPlayer.CanPause)
+                    {
+                        SelectedPlayingMusic.Play();
+                    }
+                    SelectedPlayingMusic.MPlayer.Pause();
+                }
                 _mediaPlayer?.Dispose();
                 /*ActualMedia = new Media(_libVlc, ActualFileUri);
                  _mediaPlayer = new MediaPlayer(ActualMedia);
@@ -247,18 +247,11 @@ namespace Mp3Player.ViewModels
             NextCommand = ReactiveCommand.CreateFromTask(async () =>
             {
                 
-                int index = Musics.ToList().IndexOf(SelectedPlayingMusic);
+                int index = Musics.ToList().IndexOf(SelectedMusic);
                 if ((index + 1) <= Musics.Count)
                 {
                     SelectedPlayingMusic = Musics[index+1];
-                    if(SelectedPlayingMusic.MPlayer.WillPlay)
-                        SelectedPlayingMusic.Play();
-                    else
-                    {
-                        Debug.WriteLine("Cant play");
-                        SelectedPlayingMusic.MPlayer = new MediaPlayer(_libVlc);
-                        SelectedPlayingMusic.Play();
-                    }
+                    SelectedPlayingMusic.Play();
                 }
             });
             OpenFileCommand = ReactiveCommand.CreateFromTask(async () =>
