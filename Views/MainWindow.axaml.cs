@@ -22,7 +22,7 @@ namespace Mp3Player.Views
             this.WhenActivated(d => d(ViewModel!.ShowOpenFileDialog.RegisterHandler(DoShowDialog)));
         }
         
-        private void InputElement_OnDoubleTapped(object? sender, RoutedEventArgs e)
+        private void DataGrid_OnDoubleTapped(object? sender, RoutedEventArgs e)
         {
             if (e.Source.GetType() == typeof(Border))
             {
@@ -61,6 +61,17 @@ namespace Mp3Player.Views
 
         private void DataGrid_OnLoadingRow(object? sender, DataGridRowEventArgs e)
         {
+        }
+
+        private void DataGrid_OnTapped(object? sender, RoutedEventArgs e)
+        {
+            if (e.Source.GetType() == typeof(Border))
+            {
+                var datagrid = sender as DataGrid;
+                datagrid.SelectedIndex = -1;
+                datagrid.SelectedItem = null;
+                return;;
+            }
         }
     }
 }

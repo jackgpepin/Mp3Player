@@ -63,7 +63,8 @@
                     Grid.Row="1" 
                     SelectedItem="{Binding SelectedMusic}"
                     Items="{Binding Musics}"
-                    DoubleTapped="InputElement_OnDoubleTapped" 
+                    DoubleTapped="DataGrid_OnDoubleTapped" 
+                    Tapped="DataGrid_OnTapped"
                     IsReadOnly="True" AutoGenerateColumns="False">
                    <DataGrid.Styles>
                        
