@@ -38,9 +38,17 @@ public class MusicViewModel:ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _mPlayer, value);
     }
 
+    private bool _isNowPlaying;
+    public bool IsNowPlaying
+    {
+        get => _isNowPlaying;
+        set => this.RaiseAndSetIfChanged(ref _isNowPlaying, value);
+    }
+
     private Media _media;
     public MusicViewModel(string path, LibVLC libVlc)
     {
+        IsNowPlaying = false;
         Title = path.Split("/").Last();
         //Duration = duration;
         Path = new Uri(path);

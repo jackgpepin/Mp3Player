@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -16,6 +17,7 @@ namespace Mp3Player.Views
 {
     public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     {
+        private List<DataGridRow> _musics = new List<DataGridRow>();
         public MainWindow()
         {
             InitializeComponent();
@@ -24,14 +26,14 @@ namespace Mp3Player.Views
         
         private void DataGrid_OnDoubleTapped(object? sender, RoutedEventArgs e)
         {
+            var datagrid = sender as DataGrid;
+
             if (e.Source.GetType() == typeof(Border))
             {
-                var datagrid = sender as DataGrid;
                 datagrid.SelectedItem = null;
                 datagrid.SelectedIndex = -1;
                 return;
             };
-            
             ((MainWindowViewModel) this.DataContext).DoubleClickMusic();
         }
 
@@ -61,6 +63,7 @@ namespace Mp3Player.Views
 
         private void DataGrid_OnLoadingRow(object? sender, DataGridRowEventArgs e)
         {
+            _musics.Add(e.Row);
         }
 
         private void DataGrid_OnTapped(object? sender, RoutedEventArgs e)

@@ -8,6 +8,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Threading;
 using LibVLCSharp.Shared;
 using Mp3Player.Enums;
 using ReactiveUI;
@@ -125,7 +126,10 @@ namespace Mp3Player.ViewModels
                 };
                 SelectedPlayingMusic.MPlayer.EndReached += (sender, args) =>
                 {
-                    NextCommand.Execute();
+                    Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        NextCommand.Execute();
+                    });
                 };
                 SelectedPlayingMusic.MPlayer.Playing += (sender, args) => Status = PlayerStatus.Playing;
                 SelectedPlayingMusic.MPlayer.Paused += (sender, args) => Status = PlayerStatus.Paused;
@@ -150,8 +154,6 @@ namespace Mp3Player.ViewModels
         public MainWindowViewModel()
         {
             var args = Environment.GetCommandLineArgs();
-        
-            
             try
             {
                 _libVlc = new LibVLC(enableDebugLogs: true);
@@ -187,6 +189,7 @@ namespace Mp3Player.ViewModels
                     SelectedPlayingMusic = Musics.First();
                     //SelectedMusic?.Play();
                     SelectedPlayingMusic.MPlayer.Play();
+                    Musics.First(m => m == SelectedPlayingMusic).IsNowPlaying = true;
                 }
                 else
                 {
@@ -232,6 +235,7 @@ namespace Mp3Player.ViewModels
                 //SelectedMusic.MPlayer.Play(SelectedMusic.MPlayer.Media);
                 SelectedPlayingMusic = SelectedMusic;
                 SelectedPlayingMusic.Play();
+                _setActualPlayingMusicBackground();
             });
             PreviousCommand = ReactiveCommand.CreateFromTask(async () =>
             {
@@ -240,17 +244,20 @@ namespace Mp3Player.ViewModels
                 {
                     SelectedPlayingMusic = Musics[index-1];
                     SelectedPlayingMusic.Play();
+                    _setActualPlayingMusicBackground();
+
                 }
                 
             });
             NextCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                
                 int index = Musics.ToList().IndexOf(SelectedPlayingMusic);
                 if ((index + 2) <= Musics.Count)
                 {
                     SelectedPlayingMusic = Musics[index+1];
                     SelectedPlayingMusic.Play();
+                    _setActualPlayingMusicBackground();
+
                 }
             });
             OpenFileCommand = ReactiveCommand.CreateFromTask(async () =>
@@ -270,6 +277,8 @@ namespace Mp3Player.ViewModels
 
                 SelectedPlayingMusic = musics.First();
                 SelectedPlayingMusic.Play();
+                _setActualPlayingMusicBackground();
+
             });
             RemoveCommand = ReactiveCommand.CreateFromTask(async () =>
             {
@@ -286,6 +295,8 @@ namespace Mp3Player.ViewModels
                 if (Musics.Count == 0) return;
                 SelectedMusic = Musics.First();
                 SelectedPlayingMusic.Play();
+                _setActualPlayingMusicBackground();
+
             });
             AddMusicCommand = ReactiveCommand.CreateFromTask(async () =>
             {
@@ -306,6 +317,15 @@ namespace Mp3Player.ViewModels
             ShowOpenFileDialog = new Interaction<Unit, string[]>();
             
         }
+
+        private void _setActualPlayingMusicBackground()
+        {
+            if(Musics.Any(m=>m.IsNowPlaying))
+                Musics.First(m => m.IsNowPlaying).IsNowPlaying = false;
+            Musics.First(m => m == SelectedPlayingMusic).IsNowPlaying = true;
+
+        }
+        
         private async Task PlayNext()
         {
             

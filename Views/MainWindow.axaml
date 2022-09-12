@@ -17,6 +17,7 @@
     
     <Window.Resources>
         <cnv:PlayAndPauseConverter x:Key="PlayAndPauseConverter"/>
+        <cnv:ConvertActualPlayingMusicBackground x:Key="PlayingMusicBackground"/>
     </Window.Resources>
     <Window.ContextMenu>
         
@@ -60,12 +61,15 @@
                     ContextRequested="Control_OnContextRequested"
                     Background="Transparent" 
                     DragDrop.AllowDrop="True" 
+                    CanUserReorderColumns="False"
+                    CanUserSortColumns="False"
                     Grid.Row="1" 
                     SelectedItem="{Binding SelectedMusic}"
                     Items="{Binding Musics}"
                     DoubleTapped="DataGrid_OnDoubleTapped" 
                     Tapped="DataGrid_OnTapped"
-                    IsReadOnly="True" AutoGenerateColumns="False">
+                    IsReadOnly="True" 
+                    AutoGenerateColumns="False">
                    <DataGrid.Styles>
                        
                        <Style Selector="DataGridColumnHeader">
@@ -77,6 +81,7 @@
                        <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
                            <Setter Property="Fill" Value="#333"/>
                        </Style>
+                    
                    </DataGrid.Styles>
                     <DataGrid.ContextMenu>
                         <ContextMenu Items="{Binding ContextMenuItems}">
@@ -86,9 +91,21 @@
                         </ContextMenu>
                     </DataGrid.ContextMenu>
                     <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="">
+                            <DataTemplate>
+                                <Grid IsVisible="{Binding IsNowPlaying}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="10"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="10"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Background="Green" CornerRadius="10"/>
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTextColumn  Header="Duration" Binding="{Binding Duration.Formated}"/>
                         <DataGridTextColumn Header="Title" Binding="{Binding Title}"/>
-                        <DataGridTextColumn Header="Path" Binding="{Binding Path}"/>
                     </DataGrid.Columns>
                     
                 </DataGrid>
