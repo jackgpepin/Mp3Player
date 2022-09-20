@@ -1,0 +1,66 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:Mp3Player.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Mp3Player.Views.MusicsDataGridView">
+    <Grid>
+        <DataGrid
+        
+            LoadingRow="DataGrid_OnLoadingRow"
+            SelectionChanged="DataGrid_OnSelectionChanged"
+            ContextRequested="Control_OnContextRequested"
+            Background="Transparent"
+            DragDrop.AllowDrop="True"
+            CanUserReorderColumns="False"
+            CanUserSortColumns="False"
+            Grid.Row="1"
+            SelectedItem="{Binding SelectedMusic}"
+            Items="{Binding Musics}"
+            DoubleTapped="DataGrid_OnDoubleTapped"
+            Tapped="DataGrid_OnTapped"
+            IsReadOnly="True"
+            AutoGenerateColumns="False">
+            <DataGrid.Styles>
+
+                <Style Selector="DataGridColumnHeader">
+                    <Setter Property="Background" Value="Transparent" />
+                </Style>
+                <Style Selector="DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
+                    <Setter Property="Fill" Value="gray" />
+                </Style>
+                <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
+                    <Setter Property="Fill" Value="#333" />
+                </Style>
+
+            </DataGrid.Styles>
+            <DataGrid.ContextMenu>
+                <ContextMenu Items="{Binding ContextMenuItems}">
+                    <!--<MenuItem Header="Play now" />
+                            <MenuItem Header="Pause" IsVisible="{Binding }"/>
+                            <MenuItem Header="Remove from list"/>-->
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="">
+                    <DataTemplate>
+                        <Grid IsVisible="{Binding IsNowPlaying}" HorizontalAlignment="Center"
+                              VerticalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="10" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="10" />
+                            </Grid.ColumnDefinitions>
+                            <Border Background="Green" CornerRadius="10" />
+                        </Grid>
+                    </DataTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Duration" Binding="{Binding Duration.Formated}" />
+                <DataGridTextColumn Header="Title" Binding="{Binding Title}" />
+            </DataGrid.Columns>
+
+        </DataGrid>
+    </Grid>
+</UserControl>

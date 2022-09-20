@@ -22,8 +22,17 @@ namespace Mp3Player.Views
         {
             InitializeComponent();
             this.WhenActivated(d => d(ViewModel!.ShowOpenFileDialog.RegisterHandler(DoShowDialog)));
+            this.WhenActivated(d => d(ViewModel!.ShowNewPlaylistWindow.RegisterHandler(DoShowNewPlaylistWindowAsync)));
         }
-        
+
+        private async Task DoShowNewPlaylistWindowAsync(InteractionContext<NewPlaylistWindowViewModel, PlaylistViewModel> interaction)
+        {
+            var newPlaylistWindow = new NewPlaylistWindow();
+            newPlaylistWindow.DataContext = interaction.Input;
+
+            var result = await newPlaylistWindow.ShowDialog<PlaylistViewModel>(this);
+            interaction.SetOutput(result);
+        }
         private void DataGrid_OnDoubleTapped(object? sender, RoutedEventArgs e)
         {
             var datagrid = sender as DataGrid;

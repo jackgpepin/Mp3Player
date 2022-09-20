@@ -1,0 +1,32 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Mp3Player.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="50"
+        x:Class="Mp3Player.Views.NewPlaylistWindow"
+        x:DataType="vm:NewPlaylistWindowViewModel"
+        Title="NewPlaylistWindow"
+        WindowStartupLocation="CenterOwner"
+        Width="400"
+        Height="50"
+        SystemDecorations="BorderOnly">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>
+        <TextBox 
+            HorizontalContentAlignment="Left"
+            VerticalContentAlignment="Center"
+            Text="{Binding PlaylistName}"/>
+        <Button 
+            Grid.Column="1"
+            Width="100" 
+            Height="50"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center"
+            Command="{Binding CreateCommand}">Create</Button>
+
+    </Grid>
+</Window>
