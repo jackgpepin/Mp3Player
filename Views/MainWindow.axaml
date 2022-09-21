@@ -61,6 +61,7 @@
                         Background="Transparent"
                         Grid.Row="1"
                         Items="{Binding Playlists}"
+                        ContextRequested="Playlists_OnContextRequested"
                         >
                         <ListBox.ItemTemplate>
                             <DataTemplate>
@@ -70,8 +71,7 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                         <ListBox.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="New playlist" Command="{Binding CreateNewPlaylistCommand}"/>
+                            <ContextMenu Items="{Binding PlaylistsMenuItems}">
                             </ContextMenu>
                         </ListBox.ContextMenu>
                     </ListBox>

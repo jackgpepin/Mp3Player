@@ -85,5 +85,10 @@ namespace Mp3Player.Views
                 return;;
             }
         }
+
+        private void Playlists_OnContextRequested(object? sender, ContextRequestedEventArgs e)
+        {
+            ((MainWindowViewModel) DataContext).ShowPlaylistsContextMenu();
+        }
     }
 }

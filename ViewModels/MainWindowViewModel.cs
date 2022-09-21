@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using LibVLCSharp.Shared;
+using Mp3Player.Configs;
 using Mp3Player.Enums;
 using Mp3Player.Models;
 using ReactiveUI;
@@ -194,8 +195,17 @@ namespace Mp3Player.ViewModels
             }
         }
 
+        private ObservableCollection<MenuItem> _playlistsMenuItems;
+
+        public ObservableCollection<MenuItem> PlaylistsMenuItems
+        {
+            get => _playlistsMenuItems;
+            set => this.RaiseAndSetIfChanged(ref _playlistsMenuItems, value);
+        }
+
         public MainWindowViewModel()
         {
+            var settings = Settings.Initialize();
             Main = this;
             var args = Environment.GetCommandLineArgs();
             try
@@ -220,7 +230,7 @@ namespace Mp3Player.ViewModels
                     {
                         MusicViewModel music = null;
                         try{
-                            music = new MusicViewModel(arg, _libVlc);
+                            music = new MusicViewModel(new PlaylistFile(arg), _libVlc);
                             Musics.Add(music);
                         }catch(Exception e){}
                     }
@@ -276,7 +286,7 @@ namespace Mp3Player.ViewModels
             });
             SelectMusicCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                Musics = ((MusicsDataGridViewModel) PlaylistContent).Musics;
+                Musics = ((MusicsDataGridViewModel) PlaylistContent).Playlist.Musics;
                 SelectedMusic = Musics.First(m => m == ((MusicsDataGridViewModel) PlaylistContent).SelectedMusic);
            
                 SelectedPlayingMusic = SelectedMusic;
@@ -313,7 +323,7 @@ namespace Mp3Player.ViewModels
                 List<MusicViewModel> musics = new List<MusicViewModel>();
                 foreach (var file in files)
                 {
-                    musics.Add(new MusicViewModel(file, _libVlc));
+                    musics.Add(new MusicViewModel(new PlaylistFile(file), _libVlc));
                 }
 
                 foreach (var music in musics)
@@ -351,7 +361,7 @@ namespace Mp3Player.ViewModels
                 List<MusicViewModel> musics = new List<MusicViewModel>();
                 foreach (var file in files)
                 {
-                    musics.Add(new MusicViewModel(file, _libVlc));
+                    musics.Add(new MusicViewModel(new PlaylistFile(file), _libVlc));
                 }
 
                 foreach (var music in musics)
@@ -364,12 +374,16 @@ namespace Mp3Player.ViewModels
             {
                 var newPlaylistWindow = new NewPlaylistWindowViewModel();
                 var playlist = await ShowNewPlaylistWindow.Handle(newPlaylistWindow);
-                playlist.Content = new MusicsDataGridViewModel(this);
+                playlist.Content = new MusicsDataGridViewModel(playlist,this);
                 Playlists.Add(playlist);
                 
             });
             ShowOpenFileDialog = new Interaction<Unit, string[]>();
             ShowNewPlaylistWindow = new Interaction<NewPlaylistWindowViewModel, PlaylistViewModel>();
+            DeletePlaylistCommand = ReactiveCommand.Create(() =>
+            {
+                Playlists.Remove(SelectedPlaylist);
+            });
 
         }
 
@@ -382,13 +396,22 @@ namespace Mp3Player.ViewModels
             var playlists = Playlist.GetPlaylists();
             foreach(Playlist playlist in playlists)
             {
-                Playlists.Add(new PlaylistViewModel(playlist){Content = new MusicsDataGridViewModel(this)});
+                var playlistViewModel = new PlaylistViewModel(playlist);
+                foreach (var file in playlist.PlaylistFiles)
+                {
+                    playlistViewModel.Musics.Add(new MusicViewModel(file, _libVlc));
+                }
+                playlistViewModel.Content = new MusicsDataGridViewModel(playlistViewModel, this);
+                Playlists.Add(playlistViewModel);
             }
         }
 
         private void _loadFilesFromCMDArgs()
         {
-            var playlist = new PlaylistViewModel(new Playlist("Default")){Content = new MusicsDataGridViewModel(this)};
+            
+            var playlist = new PlaylistViewModel(new Playlist("Default"));
+            playlist.Content = new MusicsDataGridViewModel(playlist, this);
+            //var playlist = new PlaylistViewModel(){Content = new MusicsDataGridViewModel(this)};
 
             var args = Environment.GetCommandLineArgs();
             if (args != null)
@@ -400,8 +423,8 @@ namespace Mp3Player.ViewModels
                         MusicViewModel music = null;
                         try
                         {
-                            music = new MusicViewModel(arg, _libVlc);
-                            ((MusicsDataGridViewModel)playlist.Content).Musics.Add(music);
+                            music = new MusicViewModel(new PlaylistFile(arg), _libVlc);
+                            ((MusicsDataGridViewModel)playlist.Content).Playlist.Musics.Add(music);
                             //Musics.Add(music);
                         }
                         catch(Exception e){}
@@ -439,6 +462,7 @@ namespace Mp3Player.ViewModels
         
         public ReactiveCommand<Unit, Unit> CreateNewPlaylistCommand { get; set; }
         public Interaction<NewPlaylistWindowViewModel, PlaylistViewModel> ShowNewPlaylistWindow { get; set; }
+        public ReactiveCommand<Unit, Unit> DeletePlaylistCommand { get; set; }
         public void DoubleClickMusic()
         {
             SelectMusicCommand.Execute();
@@ -488,6 +512,34 @@ namespace Mp3Player.ViewModels
                 ContextMenuItems = _setDefaultMusicListContextMenuItems();
             else
                 ContextMenuItems = _setMusicListContextMenuItemsFromSelectedMusic();
+        }
+
+        public void ShowPlaylistsContextMenu()
+        {
+            PlaylistsMenuItems = new ObservableCollection<MenuItem>();
+
+            if (SelectedPlaylist == null)
+            {
+                PlaylistsMenuItems.Add(new MenuItem()
+                {
+                    Header = "New playlist",
+                    Command = CreateNewPlaylistCommand
+                });
+            }
+            else
+            {
+                PlaylistsMenuItems.Add(new MenuItem()
+                {
+                    Header = "New Playlist",
+                    Command = CreateNewPlaylistCommand
+                });
+                PlaylistsMenuItems.Add(new MenuItem()
+                {
+                    Header = "Remove playlist",
+                    Command = DeletePlaylistCommand
+                });
+            }
+            
         }
     }
 }

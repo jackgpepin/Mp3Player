@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Mp3Player.Models;
 using ReactiveUI;
 
@@ -18,12 +20,29 @@ public class PlaylistViewModel : ViewModelBase
     public ViewModelBase Content
     {
         get => _content;
-        set => this.RaiseAndSetIfChanged(ref _content, value);
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _content, value);
+            //((MusicsDataGridViewModel) Content).Playlist = this;
+
+        }
+    }
+    private ObservableCollection<MusicViewModel> _musics;
+
+    public ObservableCollection<MusicViewModel> Musics
+    {
+        get => _musics;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _musics, value);
+            
+        }
     }
     
     public PlaylistViewModel(Playlist playlist)
     {
         _playlist = playlist;
+        Musics = new ObservableCollection<MusicViewModel>();
         Name = playlist.Name;
     }
 
@@ -34,6 +53,11 @@ public class PlaylistViewModel : ViewModelBase
 
     public void Save()
     {
+        _playlist.PlaylistFiles = new List<PlaylistFile>();
+        foreach (var music in Musics)
+        {
+            _playlist.PlaylistFiles.Add(music.PlaylistFile);
+        }
         _playlist.Save();
     }
     public void Delete()

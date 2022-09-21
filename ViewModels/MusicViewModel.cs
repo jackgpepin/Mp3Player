@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using LibVLCSharp.Shared;
+using Mp3Player.Models;
 using ReactiveUI;
 
 namespace Mp3Player.ViewModels;
@@ -46,12 +47,20 @@ public class MusicViewModel:ViewModelBase
     }
 
     private Media _media;
-    public MusicViewModel(string path, LibVLC libVlc)
+    private PlaylistFile _playlistFile;
+
+    public PlaylistFile PlaylistFile
     {
+        get => _playlistFile;
+        set => this.RaiseAndSetIfChanged(ref _playlistFile, value);
+    }
+    public MusicViewModel(PlaylistFile playlistFile, LibVLC libVlc)
+    {
+        PlaylistFile = playlistFile;
         IsNowPlaying = false;
-        Title = path.Split("/").Last();
+        Title = playlistFile.FilePath.Split("/").Last();
         //Duration = duration;
-        Path = new Uri(path);
+        Path = new Uri(playlistFile.FilePath);
         _media = new Media(libVlc, Path);
         _media.Parse(MediaParseOptions.ParseLocal);
         

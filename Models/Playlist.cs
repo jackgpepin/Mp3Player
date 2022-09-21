@@ -17,26 +17,32 @@ public class Playlist
 
     public void Create()
     {
+        if (this.Name == "Default") return;
+
         IDatabase database = new Database();
         database.StorePlaylist(this);
     }
     public void Save()
     {
+        if (this.Name == "Default") return;
+
         IDatabase database = new Database();
         database.UpdatePlaylist(this);
     }
 
     public void Delete()
     {
-        
+        if (this.Name == "Default") return;
+
     }
 
     public void Rename()
     {
-        
+        if (this.Name == "Default") return;
     }
     public static List<Playlist> GetPlaylists()
     {
+        
         IDatabase database = new Database();
         var playlists = database.GetPlaylists();
         return playlists;

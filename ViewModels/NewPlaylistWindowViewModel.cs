@@ -19,6 +19,7 @@ public class NewPlaylistWindowViewModel : ViewModelBase
         CreateCommand = ReactiveCommand.Create(() =>
         {
             var playlist = new Playlist(PlaylistName);
+            playlist.Create();
             var playlistViewModel = new PlaylistViewModel(playlist);
             return playlistViewModel;
         });
