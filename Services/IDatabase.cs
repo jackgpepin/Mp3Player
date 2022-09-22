@@ -10,4 +10,5 @@ public interface IDatabase
     public void StorePlaylist(Playlist playlist);
     public void UpdatePlaylist(Playlist playlist);
     public void DeletePlaylist(Playlist playlist);
+    public void RemoveFile(Playlist playlist, PlaylistFile file);
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Mp3Player.Services;
 
@@ -5,6 +6,7 @@ namespace Mp3Player.Models;
 
 public class Playlist
 {
+    public string Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public List<PlaylistFile> PlaylistFiles { get; set; } = new List<PlaylistFile>();
 
@@ -12,6 +14,7 @@ public class Playlist
     
     public Playlist(string name)
     {
+        Id = Guid.NewGuid().ToString();
         Name = name;
     }
 
@@ -35,6 +38,13 @@ public class Playlist
         if (this.Name == "Default") return;
         IDatabase database = new Database();
         database.DeletePlaylist(this);
+    }
+
+    public void RemoveFile(PlaylistFile file)
+    {
+        if (this.Name == "Default") return;
+        IDatabase database = new Database();
+        database.RemoveFile(this,  file);
     }
 
     public void Rename()

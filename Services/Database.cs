@@ -33,7 +33,7 @@ public class Database: IDatabase
     public void UpdatePlaylist(Playlist playlist)
     {
         var playlists = GetPlaylists();
-        var pOriginal = playlists.First(p => p.Name == playlist.Name);
+        var pOriginal = playlists.First(p => p.Id == playlist.Id);
         playlists.Replace(pOriginal, playlist);
         WritePlaylists(playlists);
     }
@@ -41,8 +41,19 @@ public class Database: IDatabase
     public void DeletePlaylist(Playlist playlist)
     {
         var playlists = GetPlaylists();
-        var pOriginal = playlists.First(p => p.Name == playlist.Name);
+        var pOriginal = playlists.First(p => p.Id == playlist.Id);
         playlists.Remove(pOriginal);
+        WritePlaylists(playlists);
+    }
+
+    public void RemoveFile(Playlist playlist, PlaylistFile file)
+    {
+        var playlists = GetPlaylists();
+        var pOriginal = playlists.First(p => p.Id == playlist.Id);
+        var originalFile = pOriginal.PlaylistFiles.First(f => f.Id == file.Id);
+        if (originalFile == null)
+            return;
+        pOriginal.PlaylistFiles.Remove(originalFile);
         WritePlaylists(playlists);
     }
 

@@ -65,6 +65,10 @@ public class PlaylistViewModel : ViewModelBase
         _playlist.Delete();
     }
 
+    public void RemoveFile(PlaylistFile file)
+    {
+        _playlist.RemoveFile(file);
+    }
     public void Rename()
     {
         _playlist.Rename();
