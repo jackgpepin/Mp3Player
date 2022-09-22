@@ -38,6 +38,14 @@ public class Database: IDatabase
         WritePlaylists(playlists);
     }
 
+    public void DeletePlaylist(Playlist playlist)
+    {
+        var playlists = GetPlaylists();
+        var pOriginal = playlists.First(p => p.Name == playlist.Name);
+        playlists.Remove(pOriginal);
+        WritePlaylists(playlists);
+    }
+
     private void WritePlaylists(List<Playlist> playlists)
     {
        var playlistsJson = JsonSerializer.Serialize(playlists);

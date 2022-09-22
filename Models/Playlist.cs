@@ -33,7 +33,8 @@ public class Playlist
     public void Delete()
     {
         if (this.Name == "Default") return;
-
+        IDatabase database = new Database();
+        database.DeletePlaylist(this);
     }
 
     public void Rename()

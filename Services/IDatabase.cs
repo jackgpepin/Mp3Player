@@ -9,4 +9,5 @@ public interface IDatabase
     public List<Playlist> GetPlaylists();
     public void StorePlaylist(Playlist playlist);
     public void UpdatePlaylist(Playlist playlist);
+    public void DeletePlaylist(Playlist playlist);
 }

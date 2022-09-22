@@ -382,7 +382,17 @@ namespace Mp3Player.ViewModels
             ShowNewPlaylistWindow = new Interaction<NewPlaylistWindowViewModel, PlaylistViewModel>();
             DeletePlaylistCommand = ReactiveCommand.Create(() =>
             {
-                Playlists.Remove(SelectedPlaylist);
+                var playlist = SelectedPlaylist;
+                if (SelectedPlaylist.Musics.Any(m => m.IsNowPlaying))
+                {
+                   SelectedPlaylist.Musics.First(m=>m.IsNowPlaying).MPlayer.Stop();
+                   SelectedPlaylist = null;
+                }
+                SelectedPlaylist.Delete();
+                SelectedPlaylist = Playlists.First();
+
+                Playlists.Remove(playlist);
+                
             });
 
         }
