@@ -107,11 +107,12 @@ namespace Mp3Player.ViewModels
             get => _selectedPlayingMusic;
             set
             {
+                
                 if(SelectedPlayingMusic != null && SelectedPlayingMusic.MPlayer.IsPlaying)
                     SelectedPlayingMusic.MPlayer.Stop();
                 this.RaiseAndSetIfChanged(ref _selectedPlayingMusic, value);
                 SelectedMusic = SelectedPlayingMusic;
-                SelectedPlayingMusic.MPlayer.PositionChanged += (sender, args) =>
+                /*SelectedPlayingMusic.MPlayer.PositionChanged += (sender, args) =>
                 {
                     //Position = ((SelectedMusic.MPlayer.Position * 100) / 1);
                     Position = SelectedPlayingMusic.MPlayer.Position;
@@ -128,7 +129,7 @@ namespace Mp3Player.ViewModels
                 SelectedPlayingMusic.MPlayer.Playing += (sender, args) => Status = PlayerStatus.Playing;
                 SelectedPlayingMusic.MPlayer.Paused += (sender, args) => Status = PlayerStatus.Paused;
                 SelectedPlayingMusic.MPlayer.Stopped += (sender, args) => Status = PlayerStatus.Paused;
-
+                */
                 if (SelectedPlayingMusic != null)
                 {
                     ContextMenuItems = _setMusicListContextMenuItemsFromSelectedMusic();

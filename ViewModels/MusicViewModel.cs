@@ -54,8 +54,12 @@ public class MusicViewModel:ViewModelBase
         get => _playlistFile;
         set => this.RaiseAndSetIfChanged(ref _playlistFile, value);
     }
+
+    private bool _alreadyPlayed = false;
+    private LibVLC _libVlc = null;
     public MusicViewModel(PlaylistFile playlistFile, LibVLC libVlc)
     {
+        _libVlc = libVlc;
         PlaylistFile = playlistFile;
         IsNowPlaying = false;
         Title = playlistFile.FilePath.Split("/").Last();
@@ -81,6 +85,11 @@ public class MusicViewModel:ViewModelBase
 
     public void Play()
     {
+        if (_alreadyPlayed)
+        {
+            //MPlayer = MPlayer.End;
+        }
+        _alreadyPlayed = true;
         MPlayer.Play(_media);
     }
 }

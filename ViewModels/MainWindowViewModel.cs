@@ -116,7 +116,7 @@ namespace Mp3Player.ViewModels
         }
 
         private MusicViewModel _selectedPlayingMusic;
-
+        private bool _endingMusic = false;
         public MusicViewModel SelectedPlayingMusic
         {
             get => _selectedPlayingMusic;
@@ -135,10 +135,15 @@ namespace Mp3Player.ViewModels
                 };
                 SelectedPlayingMusic.MPlayer.EndReached += (sender, args) =>
                 {
-                    Dispatcher.UIThread.InvokeAsync(() =>
+                    if(_endingMusic) return;
+                    _endingMusic = true;
+                   Dispatcher.UIThread.InvokeAsync(() =>
                     {
                         NextCommand.Execute();
+                        Debug.WriteLine("END");
+                        _endingMusic = false;
                     });
+                   Debug.WriteLine(SelectedPlayingMusic.Path);
                 };
                 SelectedPlayingMusic.MPlayer.Playing += (sender, args) => Status = PlayerStatus.Playing;
                 SelectedPlayingMusic.MPlayer.Paused += (sender, args) => Status = PlayerStatus.Paused;
