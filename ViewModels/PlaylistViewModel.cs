@@ -7,7 +7,7 @@ namespace Mp3Player.ViewModels;
 
 public class PlaylistViewModel : ViewModelBase
 {
-    private Playlist _playlist;
+    public Playlist _playlist;
     private string _name;
     public string Name
     {

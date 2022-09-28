@@ -379,7 +379,12 @@ namespace Mp3Player.ViewModels
             {
                 var newPlaylistWindow = new NewPlaylistWindowViewModel();
                 var playlist = await ShowNewPlaylistWindow.Handle(newPlaylistWindow);
+                if (playlist == null) return;
                 playlist.Content = new MusicsDataGridViewModel(playlist,this);
+                foreach (var file in playlist._playlist.PlaylistFiles)
+                {
+                    playlist.Musics.Add(new MusicViewModel(file, _libVlc));
+                }
                 Playlists.Add(playlist);
                 
             });

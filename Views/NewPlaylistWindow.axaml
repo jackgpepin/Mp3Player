@@ -3,30 +3,60 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Mp3Player.ViewModels"
-        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="50"
+        mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="500"
         x:Class="Mp3Player.Views.NewPlaylistWindow"
         x:DataType="vm:NewPlaylistWindowViewModel"
         Title="NewPlaylistWindow"
         WindowStartupLocation="CenterOwner"
-        Width="400"
-        Height="50"
+        Width="700"
+        Height="500"
         SystemDecorations="BorderOnly">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="100"/>
-        </Grid.ColumnDefinitions>
-        <TextBox 
-            HorizontalContentAlignment="Left"
-            VerticalContentAlignment="Center"
-            Text="{Binding PlaylistName}"/>
-        <Button 
-            Grid.Column="1"
-            Width="100" 
-            Height="50"
-            HorizontalContentAlignment="Center"
-            VerticalContentAlignment="Center"
-            Command="{Binding CreateCommand}">Create</Button>
-
+    <Grid Margin="0,5,0,5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock 
+                Margin="10,0,5,0"
+                Text="Name:"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"/>
+            <TextBox 
+                HorizontalContentAlignment="Left"
+                VerticalContentAlignment="Center"
+                Text="{Binding PlaylistName}"
+                Watermark="Playlist name"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Margin="0,5,0,0">
+            <TextBlock Text="Files:" Margin="10,0,0,0"/>
+            <ListBox 
+                Background="Transparent"
+                Grid.Row="1"
+                Items="{Binding PlaylistFiles}">
+            
+            </ListBox>
+        </StackPanel>
+        <StackPanel
+            HorizontalAlignment="Right"
+            Orientation="Horizontal"
+            Grid.Row="2">
+            <StackPanel.Styles>
+                <Style Selector="StackPanel > Button">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Height" Value="40"/>
+                    <Setter Property="Width" Value="100"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                </Style> 
+            </StackPanel.Styles>
+            <Button Content="Add file" Command="{Binding AddFilesCommand}"/>
+            <Button Content="Cancel" Click="Cancel_OnClick"/>
+            <Button 
+                Command="{Binding CreateCommand}"
+                Content="Save"
+                />
+        </StackPanel>
     </Grid>
 </Window>
