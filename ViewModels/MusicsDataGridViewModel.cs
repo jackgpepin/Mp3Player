@@ -360,6 +360,21 @@ namespace Mp3Player.ViewModels
                 
 
             });
+            CopyFileToPlaylistCommand = ReactiveCommand.Create((string playlistName) =>
+            {
+                var music = new MusicViewModel(new PlaylistFile(SelectedMusic.PlaylistFile.FilePath), _libVlc);
+                var playlist = MainWindowViewModel.Playlists.First(p => p.Name == playlistName);
+                playlist.Musics.Add(music);
+                playlist.Save();
+            });
+            MoveFileToPlaylistCommand = ReactiveCommand.Create((string playlistName) =>
+            {
+                var music = new MusicViewModel(new PlaylistFile(SelectedMusic.PlaylistFile.FilePath), _libVlc);
+                var playlist = MainWindowViewModel.Playlists.First(p => p.Name == playlistName);
+                Playlist.Musics.Remove(SelectedMusic);
+                playlist.Musics.Add(music);
+                playlist.Save();
+            });
             Text = Playlist.Musics.Count.ToString();
             ShowOpenFileDialog = new Interaction<Unit, string[]>();
             ShowOpenFolderDialog = new Interaction<Unit, string[]>();
@@ -393,6 +408,9 @@ namespace Mp3Player.ViewModels
         public ReactiveCommand<Unit, Unit> OpenFileCommand { get; set; }
         public ReactiveCommand<Unit, Unit> OpenFolderCommand { get; set; }
         public ReactiveCommand<Unit, Unit> AddMusicCommand { get; set; }
+        public ReactiveCommand<string, Unit> CopyFileToPlaylistCommand { get; set; }
+        public ReactiveCommand<string, Unit> MoveFileToPlaylistCommand { get; set; }
+
         public Interaction<Unit, string[]> ShowOpenFileDialog { get; set; }
         public Interaction<Unit, string[]> ShowOpenFolderDialog { get; set; }
         public void DoubleClickMusic()
@@ -434,7 +452,36 @@ namespace Mp3Player.ViewModels
                 items.Add(new MenuItem(){Header = "Play", Command = PlayCommand});
             
             items.Add(new MenuItem(){Header = "Remove from list", Command = RemoveCommand});
-
+            
+            // Copy file from one playlist to another
+            var copyToPlaylistMenuItem = new MenuItem(){Header = "Copy to"};
+            var playlistItems = new ObservableCollection<MenuItem>();
+            foreach (var playlist in MainWindowViewModel.Playlists)
+            {
+                playlistItems.Add(new MenuItem()
+                {
+                    Header = playlist.Name,
+                    Command = CopyFileToPlaylistCommand,
+                    CommandParameter = playlist.Name
+                });
+            }
+            copyToPlaylistMenuItem.Items = playlistItems;
+            items.Add(copyToPlaylistMenuItem);
+            
+            // Move file from one playlist to another
+            var moveToPlaylistMenuItem = new MenuItem(){Header = "Move to"};
+            var playlistItems2 = new ObservableCollection<MenuItem>();
+            foreach (var playlist in MainWindowViewModel.Playlists)
+            {
+                playlistItems2.Add(new MenuItem()
+                {
+                    Header = playlist.Name,
+                    Command = MoveFileToPlaylistCommand,
+                    CommandParameter = playlist.Name
+                });
+            }
+            moveToPlaylistMenuItem.Items = playlistItems2;
+            items.Add(moveToPlaylistMenuItem);
             return items;
         }
 
