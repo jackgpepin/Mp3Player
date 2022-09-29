@@ -23,6 +23,7 @@ namespace Mp3Player.Views
             InitializeComponent();
             this.WhenActivated(d => d(ViewModel!.ShowOpenFileDialog.RegisterHandler(DoShowDialog)));
             this.WhenActivated(d => d(ViewModel!.ShowNewPlaylistWindow.RegisterHandler(DoShowNewPlaylistWindowAsync)));
+            this.WhenActivated(d => d(ViewModel!.ShowOpenFolderDialog.RegisterHandler(DoShowOpenFolderDialog)));
         }
 
         private async Task DoShowNewPlaylistWindowAsync(InteractionContext<NewPlaylistWindowViewModel, PlaylistViewModel> interaction)
@@ -54,6 +55,14 @@ namespace Mp3Player.Views
 
             interactionContext.SetOutput(files);
         }
+
+        private async Task DoShowOpenFolderDialog(InteractionContext<Unit, string> interactionContext)
+        {
+            var dialog = new OpenFolderDialog();
+            dialog.Title = "Choose folder to open";
+            var folder = await dialog.ShowAsync(this);
+            interactionContext.SetOutput(folder);
+        }
         private async void MenuItem_ExitOnClick(object? sender, RoutedEventArgs e)
         {   
             this.Close();
@@ -61,7 +70,7 @@ namespace Mp3Player.Views
         }
         private void Control_OnContextRequested(object? sender, ContextRequestedEventArgs e)
         {
-            ((MainWindowViewModel) this.DataContext).ShowContextMenu();
+            //((MainWindowViewModel) this.DataContext).ShowContextMenu();
             //e.Handled = true;
         }
 

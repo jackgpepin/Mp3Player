@@ -321,26 +321,7 @@ namespace Mp3Player.ViewModels
 
                 }
             });
-            OpenFileCommand = ReactiveCommand.CreateFromTask(async () =>
-            {
-                string[] files = (await ShowOpenFileDialog.Handle(Unit.Default));
-                if (files == null) return;
-                List<MusicViewModel> musics = new List<MusicViewModel>();
-                foreach (var file in files)
-                {
-                    musics.Add(new MusicViewModel(new PlaylistFile(file), _libVlc));
-                }
-
-                foreach (var music in musics)
-                {
-                    Musics.Add(music);
-                }
-
-                SelectedPlayingMusic = musics.First();
-                SelectedPlayingMusic.Play();
-                _setActualPlayingMusicBackground();
-
-            });
+            
             RemoveCommand = ReactiveCommand.CreateFromTask(async () =>
             {
                 if (SelectedMusic == null) return;
@@ -390,6 +371,7 @@ namespace Mp3Player.ViewModels
             });
             ShowOpenFileDialog = new Interaction<Unit, string[]>();
             ShowNewPlaylistWindow = new Interaction<NewPlaylistWindowViewModel, PlaylistViewModel>();
+            ShowOpenFolderDialog = new Interaction<Unit, string>();
             DeletePlaylistCommand = ReactiveCommand.Create(() =>
             {
                 var playlist = SelectedPlaylist;
@@ -476,10 +458,9 @@ namespace Mp3Player.ViewModels
         public ReactiveCommand<Unit, Unit> SelectMusicCommand { get; set; }
         public ReactiveCommand<Unit, Unit> PreviousCommand { get; set; }
         public ReactiveCommand<Unit, Unit> NextCommand { get; set; }
-        public ReactiveCommand<Unit, Unit> OpenFileCommand { get; set; }
         public ReactiveCommand<Unit, Unit> AddMusicCommand { get; set; }
         public Interaction<Unit, string[]> ShowOpenFileDialog { get; set; }
-        
+        public Interaction<Unit, string> ShowOpenFolderDialog { get; set; }
         public ReactiveCommand<Unit, Unit> CreateNewPlaylistCommand { get; set; }
         public Interaction<NewPlaylistWindowViewModel, PlaylistViewModel> ShowNewPlaylistWindow { get; set; }
         public ReactiveCommand<Unit, Unit> DeletePlaylistCommand { get; set; }
@@ -496,23 +477,6 @@ namespace Mp3Player.ViewModels
             set => this.RaiseAndSetIfChanged(ref _contextMenuItems, value);
         }
 
-        
-
-        private  ObservableCollection<MenuItem> _setDefaultMusicListContextMenuItems()
-        {
-            Console.WriteLine("Generate context menu");
-            var items = new ObservableCollection<MenuItem>()
-            {
-                new MenuItem(){Header = "Play all", Command = PlayAllCommand},
-                new MenuItem(){Header = "Open file", Command = OpenFileCommand},
-                new MenuItem(){Header = "Open folder", IsEnabled = false},
-                new MenuItem(){Header = "Clear list", Command = RemoveAllCommand},
-                new MenuItem(){Header = "Add music", Command = AddMusicCommand}
-            };
-
-            return items;
-        }
-
         private ObservableCollection<MenuItem> _setMusicListContextMenuItemsFromSelectedMusic()
         {
             var items = new ObservableCollection<MenuItem>();
@@ -526,14 +490,7 @@ namespace Mp3Player.ViewModels
             return items;
         }
 
-        public void ShowContextMenu()
-        {
-            if (SelectedMusic == null)
-                ContextMenuItems = _setDefaultMusicListContextMenuItems();
-            else
-                ContextMenuItems = _setMusicListContextMenuItemsFromSelectedMusic();
-        }
-
+      
         public void ShowPlaylistsContextMenu()
         {
             PlaylistsMenuItems = new ObservableCollection<MenuItem>();

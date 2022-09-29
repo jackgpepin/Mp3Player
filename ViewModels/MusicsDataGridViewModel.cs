@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -296,12 +297,30 @@ namespace Mp3Player.ViewModels
                         MainWindowViewModel.Musics.Add(music);
                     }
                 }
+
+                
                 Playlist.Save();
 
                 //SelectedPlayingMusic = musics.First();
                 //SelectedPlayingMusic.Play();
                 _setActualPlayingMusicBackground();
 
+            });
+            OpenFolderCommand = ReactiveCommand.CreateFromTask(async () =>
+            {
+                var folder = await MainWindowViewModel.ShowOpenFolderDialog.Handle(Unit.Default);
+                if (folder != null && Directory.Exists(folder))
+                {
+                    var files = Directory.EnumerateFiles(folder);
+                    foreach (var file in files)
+                    {
+                        var playlistFile = new PlaylistFile(file);
+                        Playlist._playlist.PlaylistFiles.Add(playlistFile);
+                        Playlist.Musics.Add(new MusicViewModel(playlistFile, _libVlc));
+                    }
+                    
+                    Playlist.Save();
+                }
             });
             RemoveCommand = ReactiveCommand.CreateFromTask(async () =>
             {
@@ -343,7 +362,8 @@ namespace Mp3Player.ViewModels
             });
             Text = Playlist.Musics.Count.ToString();
             ShowOpenFileDialog = new Interaction<Unit, string[]>();
-            
+            ShowOpenFolderDialog = new Interaction<Unit, string[]>();
+
         }
 
         private void _setActualPlayingMusicBackground()
@@ -371,8 +391,10 @@ namespace Mp3Player.ViewModels
         public ReactiveCommand<Unit, Unit> PreviousCommand { get; set; }
         public ReactiveCommand<Unit, Unit> NextCommand { get; set; }
         public ReactiveCommand<Unit, Unit> OpenFileCommand { get; set; }
+        public ReactiveCommand<Unit, Unit> OpenFolderCommand { get; set; }
         public ReactiveCommand<Unit, Unit> AddMusicCommand { get; set; }
         public Interaction<Unit, string[]> ShowOpenFileDialog { get; set; }
+        public Interaction<Unit, string[]> ShowOpenFolderDialog { get; set; }
         public void DoubleClickMusic()
         {
             SelectedPlayingMusic = SelectedMusic;
@@ -395,7 +417,7 @@ namespace Mp3Player.ViewModels
             {
                 new MenuItem(){Header = "Play all", Command = PlayAllCommand},
                 new MenuItem(){Header = "Open file", Command = OpenFileCommand},
-                new MenuItem(){Header = "Open folder", IsEnabled = false},
+                new MenuItem(){Header = "Open folder", Command = OpenFolderCommand},
                 new MenuItem(){Header = "Clear list", Command = RemoveAllCommand},
                 new MenuItem(){Header = "Add music", Command = AddMusicCommand}
             };
