@@ -5,7 +5,7 @@ namespace Mp3Player.ViewModels;
 
 public class Timer:ViewModelBase
 {
-    private string _formated = "00:00:00";
+    private string _formated = "00:00";
     public string Formated
     {
         get => _formated;
@@ -46,7 +46,7 @@ public class Timer:ViewModelBase
         Seconds = time.Seconds;
         Milliseconds = time.Milliseconds;
 
-        Formated = $"{Hour.ToString("00")}:{Minutes.ToString("00")}:{Seconds.ToString("00")}";
+        Formated = $"{Minutes.ToString("00")}:{Seconds.ToString("00")}";
     }
 
 }

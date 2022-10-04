@@ -46,6 +46,12 @@ namespace Mp3Player.ViewModels
             set => this.RaiseAndSetIfChanged(ref _actualTime, value);
         }
 
+        private Timer _totalDuration = new Timer();
+        public Timer TotalDuration
+        {
+            get => _totalDuration;
+            set => this.RaiseAndSetIfChanged(ref _totalDuration, value);
+        }
         private Timer _audioLength = new Timer();
 
         public Timer AudioLength
@@ -125,6 +131,10 @@ namespace Mp3Player.ViewModels
                 if(SelectedPlayingMusic != null && SelectedPlayingMusic.MPlayer.IsPlaying)
                     SelectedPlayingMusic.MPlayer.Stop();
                 this.RaiseAndSetIfChanged(ref _selectedPlayingMusic, value);
+                if (SelectedPlayingMusic != null)
+                {
+                    
+                }
                 SelectedMusic = SelectedPlayingMusic;
                 SelectedPlayingMusic.MPlayer.PositionChanged += (sender, args) =>
                 {
@@ -132,6 +142,10 @@ namespace Mp3Player.ViewModels
                     Position = SelectedPlayingMusic.MPlayer.Position;
                     var time = TimeSpan.FromMilliseconds(SelectedPlayingMusic.MPlayer.Time);
                     ActualTime.SetActual(time);
+                };
+                SelectedPlayingMusic.MPlayer.LengthChanged += (sender, args) =>
+                {
+                    TotalDuration.SetActual(TimeSpan.FromMilliseconds(SelectedPlayingMusic.MPlayer.Length));
                 };
                 SelectedPlayingMusic.MPlayer.EndReached += (sender, args) =>
                 {

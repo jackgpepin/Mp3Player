@@ -11,128 +11,151 @@
         Title="Mp3Player"
         WindowStartupLocation="CenterScreen"
         DragDrop.AllowDrop="True"
-        >
+        SystemDecorations="None"
+        TransparencyLevelHint="Transparent"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="-1">
 
     <Design.DataContext>
-        <vm:MainWindowViewModel/>
+        <vm:MainWindowViewModel />
     </Design.DataContext>
-    
+
     <Window.Resources>
-        <cnv:PlayAndPauseConverter x:Key="PlayAndPauseConverter"/>
-        <cnv:ConvertActualPlayingMusicBackground x:Key="PlayingMusicBackground"/>
+        <cnv:PlayAndPauseConverter x:Key="PlayAndPauseConverter" />
+        <cnv:ConvertActualPlayingMusicBackground x:Key="PlayingMusicBackground" />
     </Window.Resources>
-    <Window.ContextMenu>
-        
-    </Window.ContextMenu>
-    
-    <Grid Background="#191919">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="80"/>
-        </Grid.RowDefinitions>
-        <!--<TextBlock HorizontalAlignment="Center" Text="{Binding Title}"/>
-        <Button Content="Play" Command="{Binding PlayCommand}"/>
-        <Button Content="Pause" Command="{Binding PauseCommand}"/>
-        <Button Content="Stop" Command="{Binding StopCommand}"/>
-        <Button Content="Restart" Command="{Binding RestartCommand}"/>-->
-        <Menu Background="Transparent">
-            <MenuItem Header="File">
-               <MenuItem Width="150" Header="Open" Command="{Binding OpenFileCommand}"></MenuItem>
-                <MenuItem Header="Exit" Click="MenuItem_ExitOnClick"></MenuItem>
-            </MenuItem>
-        </Menu>
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/>
-                <ColumnDefinition Width="1"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Grid >
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="20"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Text="Playlists" Margin="10,0,0,0"/>
-                    <ListBox
-                        SelectedItem="{Binding SelectedPlaylist}"
-                        Margin="10,0,0,0"
-                        Background="Transparent"
-                        Grid.Row="1"
-                        Items="{Binding Playlists}"
-                        ContextRequested="Playlists_OnContextRequested"
-                        >
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <TextBlock Text="{Binding Name}"/>
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                        <ListBox.ContextMenu>
-                            <ContextMenu Items="{Binding PlaylistsMenuItems}">
-                            </ContextMenu>
-                        </ListBox.ContextMenu>
-                    </ListBox>
-                </Grid>
-               
-            </Grid>
-            <Separator Grid.Column="1" Background="#222222"/>
-            <Grid Grid.Column="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="20"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <TextBlock HorizontalAlignment="Center">Lista de musicas</TextBlock>
-               
-                <UserControl Grid.Row="1" Content="{Binding PlaylistContent}"/>
-                
-                
-            </Grid>
-        </Grid>
-        <StackPanel Grid.Row="2" VerticalAlignment="Center">
-            <WrapPanel HorizontalAlignment="Center" >
-                <Button Background="Transparent" Command="{Binding PreviousCommand}">
-                    <Image Width="20" Source="/Assets/prev.png"></Image>
-                </Button>
-                <Button Background="Transparent" Command="{Binding PlayCommand}">
-                    <Image Width="20" Source="{Binding Status,Converter={StaticResource PlayAndPauseConverter}}"></Image>
-                </Button>
-               
-                <Button Background="Transparent" Command="{Binding NextCommand}">
-                    <Image Width="20" Source="/Assets/next.png"></Image>
-                </Button>
-            </WrapPanel>
-    
-            <Grid>
+    <Border CornerRadius="20" Background="#0F141D" Padding="10">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="100" />
+            </Grid.RowDefinitions>
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <Border
+                    Width="15"
+                    Height="15"
+                    Background="Transparent"
+                    BorderBrush="#202a3d"
+                    BorderThickness="2"
+                    CornerRadius="20" />
+                <Separator Width="5" />
+                <Border
+                    Width="15"
+                    Height="15"
+                    Background="Transparent"
+                    BorderBrush="#202a3d"
+                    BorderThickness="2"
+                    CornerRadius="20">
+
+                </Border>
+            </StackPanel>
+            <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="200"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="1" />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Grid Grid.Column="1" HorizontalAlignment="Center" >
-                    <Grid.ColumnDefinitions>
-                    
-                        <ColumnDefinition Width="70"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="70"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="{Binding ActualTime.Formated}"/>
-                    <!--<ProgressBar  MinWidth="300" Margin="5,0,5,0" Value="{Binding Position}"/>
-               --> 
-                    <Slider Maximum="1" Value="{Binding Position}" Margin="0,-20,12,0" Grid.Column="1" Width="300"></Slider>
-                    <TextBlock Grid.Column="2" Text="{Binding  SelectedPlayingMusic.Duration.Formated}"/>
+                <Grid>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Playlists" Margin="10,0,0,0" />
+                        <ListBox
+                            SelectedItem="{Binding SelectedPlaylist}"
+                            Margin="10,0,0,0"
+                            Background="Transparent"
+                            Grid.Row="1"
+                            Items="{Binding Playlists}"
+                            ContextRequested="Playlists_OnContextRequested">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <TextBlock Text="{Binding Name}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                            <ListBox.ContextMenu>
+                                <ContextMenu Items="{Binding PlaylistsMenuItems}">
+                                </ContextMenu>
+                            </ListBox.ContextMenu>
+                        </ListBox>
+                    </Grid>
+
                 </Grid>
+                <Separator Grid.Column="1" Background="#222222" />
                 <Grid Grid.Column="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Image  Margin="80,-15,0,0" Source="/Assets/volume.png" Width="20"/>
-                    <Slider Maximum="100" Grid.Column="1" Value="{Binding Volume}" Width="80" Margin="0,-20,0,0"></Slider>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <TextBlock HorizontalAlignment="Center">Lista de musicas</TextBlock>
+
+                    <UserControl Grid.Row="1" Content="{Binding PlaylistContent}" />
                 </Grid>
             </Grid>
-        </StackPanel>
-    </Grid>
+            <StackPanel Grid.Row="2" VerticalAlignment="Center">
+                <StackPanel Height="40" HorizontalAlignment="Stretch">
+                    <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center">
+                        <Button Background="Transparent" Command="{Binding PreviousCommand}">
+                            <Image Width="20" Source="/Assets/prev.png"></Image>
+                        </Button>
+                        <Button Background="Transparent" Command="{Binding PlayCommand}">
+                            <Image Width="20"
+                                   Source="{Binding Status,Converter={StaticResource PlayAndPauseConverter}}">
+                            </Image>
+                        </Button>
+
+                        <Button Background="Transparent" Command="{Binding NextCommand}">
+                            <Image Width="20" Source="/Assets/next.png"></Image>
+                        </Button>
+                    </StackPanel>
+                    
+                </StackPanel>
+                <StackPanel 
+                      Height="40"
+                      HorizontalAlignment="Right"
+                      Margin="0,-40,0,0"
+                      Orientation="Horizontal">
+                        
+                    <Image 
+                        VerticalAlignment="Center"
+                        Margin="0,0,3,0"
+                        Source="/Assets/volume.png"
+                        Width="20" />
+                    <Slider 
+                        VerticalAlignment="Center"
+                        Maximum="100"
+                        Value="{Binding Volume}"
+                        Width="80" 
+                        Margin="0,-18,0,0"></Slider>
+                </StackPanel>
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="22" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Slider Grid.Row="0" Maximum="1" Value="{Binding Position}" Margin="0,-20,12,0" Grid.Column="1"
+                            HorizontalAlignment="Stretch">
+                    </Slider>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+
+                            <ColumnDefinition Width="70" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="70" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{Binding ActualTime.Formated}" />
+                        <TextBlock Grid.Column="2" Text="{Binding  TotalDuration.Formated}" />
+                    </Grid>
+                </Grid>
+            </StackPanel>
+        </Grid>
+    </Border>
 </Window>

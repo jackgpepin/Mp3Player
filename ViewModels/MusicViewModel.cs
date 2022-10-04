@@ -67,9 +67,8 @@ public class MusicViewModel:ViewModelBase
         Path = new Uri(playlistFile.FilePath);
         _media = new Media(libVlc, Path);
         _media.Parse(MediaParseOptions.ParseLocal);
-        
         MPlayer = new MediaPlayer(_media);
-       
+        
         //MPlayer.Play(media);
         _media.MetaChanged += (sender, args) =>
         {
@@ -81,6 +80,7 @@ public class MusicViewModel:ViewModelBase
             TimeSpan time = TimeSpan.FromMilliseconds(MPlayer.Length);
             Duration.SetActual(time);
         };
+       
     }
 
     public void Play()
