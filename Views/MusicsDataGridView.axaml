@@ -57,8 +57,12 @@
                         </Grid>
                     </DataTemplate>
                 </DataGridTemplateColumn>
+                <DataGridTextColumn Width="300" Header="Title" Binding="{Binding Title}" />
+                <DataGridTextColumn Header="Artist" Binding="{Binding Artist}" />
+                <DataGridTextColumn Header="Album" Binding="{Binding Album}" />
+
                 <DataGridTextColumn Header="Duration" Binding="{Binding Duration.Formated}" />
-                <DataGridTextColumn Header="Title" Binding="{Binding Title}" />
+
             </DataGrid.Columns>
 
         </DataGrid>

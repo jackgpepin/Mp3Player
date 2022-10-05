@@ -133,7 +133,8 @@ namespace Mp3Player.ViewModels
                 this.RaiseAndSetIfChanged(ref _selectedPlayingMusic, value);
                 if (SelectedPlayingMusic != null)
                 {
-                    
+                    var a = SelectedPlayingMusic.MPlayer.Media.Meta(MetadataType.Album);
+                    Console.WriteLine();
                 }
                 SelectedMusic = SelectedPlayingMusic;
                 SelectedPlayingMusic.MPlayer.PositionChanged += (sender, args) =>

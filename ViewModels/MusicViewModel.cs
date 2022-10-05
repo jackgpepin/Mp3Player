@@ -16,6 +16,19 @@ public class MusicViewModel:ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _title, value);
     }
 
+    private string _artist;
+    public string Artist
+    {
+        get => _artist;
+        set => this.RaiseAndSetIfChanged(ref _artist, value);
+    }
+
+    private string _album;
+    public string Album
+    {
+        get => _album;
+        set => this.RaiseAndSetIfChanged(ref _album, value);
+    }
     private Timer _duration;
     public Timer Duration
     {
@@ -70,9 +83,12 @@ public class MusicViewModel:ViewModelBase
         MPlayer = new MediaPlayer(_media);
         
         //MPlayer.Play(media);
+        
         _media.MetaChanged += (sender, args) =>
         {
             Title = _media.Meta(MetadataType.Title);
+            Artist = _media.Meta(MetadataType.Artist);
+            Album = _media.Meta(MetadataType.Album);
         };
         MPlayer.LengthChanged += (sender, args) =>
         {
@@ -80,7 +96,9 @@ public class MusicViewModel:ViewModelBase
             TimeSpan time = TimeSpan.FromMilliseconds(MPlayer.Length);
             Duration.SetActual(time);
         };
-       
+        
+        
+
     }
 
     public void Play()
