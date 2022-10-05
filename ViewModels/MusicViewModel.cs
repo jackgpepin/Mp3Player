@@ -29,6 +29,10 @@ public class MusicViewModel:ViewModelBase
         get => _album;
         set => this.RaiseAndSetIfChanged(ref _album, value);
     }
+
+    private string _artPath;
+    public string ArtPath { get; set; }
+    
     private Timer _duration;
     public Timer Duration
     {
@@ -89,6 +93,7 @@ public class MusicViewModel:ViewModelBase
             Title = _media.Meta(MetadataType.Title);
             Artist = _media.Meta(MetadataType.Artist);
             Album = _media.Meta(MetadataType.Album);
+            ArtPath = _media.Meta(MetadataType.ArtworkURL);
         };
         MPlayer.LengthChanged += (sender, args) =>
         {

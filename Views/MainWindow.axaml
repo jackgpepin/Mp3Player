@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:cnv="using:Mp3Player.Converters"
         xmlns:views="clr-namespace:Mp3Player.Views"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="500"
         x:Class="Mp3Player.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="Mp3Player"
@@ -25,6 +25,7 @@
     <Window.Resources>
         <cnv:PlayAndPauseConverter x:Key="PlayAndPauseConverter" />
         <cnv:ConvertActualPlayingMusicBackground x:Key="PlayingMusicBackground" />
+        <cnv:ArtConverter x:Key="ArtConverter"></cnv:ArtConverter>
     </Window.Resources>
     <Border CornerRadius="20" Background="#0F141D" Padding="25">
 
@@ -60,18 +61,22 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid>
-                    <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="200" />
+                    </Grid.RowDefinitions>
+                    <Grid >
                         <Grid.RowDefinitions>
                             <RowDefinition Height="20" />
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="30" />
                         </Grid.RowDefinitions>
                         <TextBlock Text="Playlists" Margin="0,0,0,0" />
                         <ListBox
-                            SelectedItem="{Binding SelectedPlaylist}"
-                            Margin="0,0,0,0"
                             Background="Transparent"
+                            MaxHeight="250"
                             Grid.Row="1"
+                            SelectedItem="{Binding SelectedPlaylist}"
                             Items="{Binding Playlists}"
                             ContextRequested="Playlists_OnContextRequested">
                             <ListBox.ItemTemplate>
@@ -86,19 +91,20 @@
                                 </ContextMenu>
                             </ListBox.ContextMenu>
                         </ListBox>
-                        <Button  
-                            Grid.Row="2" 
+                        <Button
+                            Grid.Row="2"
                             Command="{Binding CreateNewPlaylistCommand}">
                             <Button.Styles>
                                 <Style Selector="Button">
-                                    <Setter Property="Background" Value="Transparent"/>
-                                    <Setter Property="Foreground" Value="#ccc"/>
+                                    <Setter Property="Background" Value="Transparent" />
+                                    <Setter Property="Foreground" Value="#ccc" />
+                                    <Setter Property="Margin" Value="0,0,0,0"/>
                                 </Style>
                                 <Style Selector="Button:pressed /template/ ContentPresenter#PART_ContentPresenter">
-                                    <Setter Property="Background" Value="Red"/>
+                                    <Setter Property="Background" Value="Red" />
                                 </Style>
                                 <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="Background" Value="Transparent" />
                                 </Style>
                                 <Style Selector="Button:disabled /template/ ContentPresenter#PART_ContentPresenter">
                                     <Setter Property="Background" Value="Transparent" />
@@ -106,6 +112,31 @@
                             </Button.Styles>
                             + New Playlist
                         </Button>
+                    </Grid>
+                    <Grid Grid.Row="1" Margin="0,5,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="30" />
+                        </Grid.RowDefinitions>
+
+                        <Border CornerRadius="10" ClipToBounds="True" Width="170">
+                            <Panel Background="Transparent">
+                                <Image 
+                                    Source="{Binding SelectedPlayingMusic.ArtPath, Converter={StaticResource ArtConverter}}"
+                                    Stretch="Fill">
+                                    <Image.Styles>
+                                        <Style Selector="Image /template/Border">
+                                            <Setter Property="Background" Value="Red" />
+                                        </Style>
+                                    </Image.Styles>
+                                </Image>
+                            </Panel>
+                        </Border>
+                        <TextBlock
+                            TextWrapping="Wrap"
+                            Margin="26,15,0,0"
+                            Grid.Row="1"
+                            Text="{Binding SelectedPlayingMusic.Title}" />
                     </Grid>
                 </Grid>
                 <Separator Grid.Column="1" Background="#222222" />
@@ -121,7 +152,7 @@
             </Grid>
             <StackPanel Grid.Row="2" VerticalAlignment="Center">
                 <StackPanel Height="40" HorizontalAlignment="Stretch">
-                    <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Button Background="Transparent" Command="{Binding PreviousCommand}">
                             <Image Width="20" Source="/Assets/prev.png"></Image>
                         </Button>
@@ -135,25 +166,26 @@
                             <Image Width="20" Source="/Assets/next.png"></Image>
                         </Button>
                     </StackPanel>
-                    
+
                 </StackPanel>
-                <StackPanel 
-                      Height="40"
-                      HorizontalAlignment="Right"
-                      Margin="0,-40,0,0"
-                      Orientation="Horizontal">
-                        
-                    <Image 
+                <StackPanel
+                    Height="40"
+                    HorizontalAlignment="Right"
+                    Margin="0,-40,0,0"
+                    Orientation="Horizontal">
+
+                    <Image
                         VerticalAlignment="Center"
                         Margin="0,0,3,0"
                         Source="/Assets/volume.png"
                         Width="20" />
-                    <Slider 
+                    <Slider
                         VerticalAlignment="Center"
                         Maximum="100"
                         Value="{Binding Volume}"
-                        Width="80" 
-                        Margin="0,-18,0,0"></Slider>
+                        Width="80"
+                        Margin="0,-18,0,0">
+                    </Slider>
                 </StackPanel>
                 <Grid>
 
