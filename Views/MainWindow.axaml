@@ -145,7 +145,6 @@
                         <RowDefinition Height="20" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <TextBlock HorizontalAlignment="Center">Lista de musicas</TextBlock>
 
                     <UserControl Grid.Row="1" Content="{Binding PlaylistContent}" />
                 </Grid>
