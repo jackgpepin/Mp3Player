@@ -24,6 +24,10 @@ namespace Mp3Player.Views
             this.WhenActivated(d => d(ViewModel!.ShowOpenFileDialog.RegisterHandler(DoShowDialog)));
             this.WhenActivated(d => d(ViewModel!.ShowNewPlaylistWindow.RegisterHandler(DoShowNewPlaylistWindowAsync)));
             this.WhenActivated(d => d(ViewModel!.ShowOpenFolderDialog.RegisterHandler(DoShowOpenFolderDialog)));
+            this.FindControl<Border>("AppBorder").PointerPressed += (sender, args) =>
+            {
+              PlatformImpl?.BeginMoveDrag(args);  
+            };
         }
 
         private async Task DoShowNewPlaylistWindowAsync(InteractionContext<NewPlaylistWindowViewModel, PlaylistViewModel> interaction)

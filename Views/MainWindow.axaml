@@ -16,7 +16,8 @@
         Background="Transparent"
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="NoChrome"
-        ExtendClientAreaTitleBarHeightHint="-1">
+        ExtendClientAreaTitleBarHeightHint="-1"
+        MinHeight="700">
 
     <Design.DataContext>
         <vm:MainWindowViewModel />
@@ -27,8 +28,8 @@
         <cnv:ConvertActualPlayingMusicBackground x:Key="PlayingMusicBackground" />
         <cnv:ArtConverter x:Key="ArtConverter"></cnv:ArtConverter>
     </Window.Resources>
-    <Border CornerRadius="20" Background="#0F141D" Padding="25">
-
+    <Border CornerRadius="20" Background="#0F141D" Padding="25" x:Name="AppBorder">
+        
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="40" />

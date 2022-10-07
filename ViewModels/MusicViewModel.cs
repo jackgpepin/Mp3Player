@@ -87,13 +87,20 @@ public class MusicViewModel:ViewModelBase
         MPlayer = new MediaPlayer(_media);
         
         //MPlayer.Play(media);
-        
+        _media.Parse();
+        _media.ParsedChanged += (sender, args) =>
+        {
+            Duration = new Timer();
+            TimeSpan time = TimeSpan.FromMilliseconds(_media.Duration);
+            Duration.SetActual(time);
+        };
         _media.MetaChanged += (sender, args) =>
         {
             Title = _media.Meta(MetadataType.Title);
             Artist = _media.Meta(MetadataType.Artist);
             Album = _media.Meta(MetadataType.Album);
             ArtPath = _media.Meta(MetadataType.ArtworkURL);
+            //_media.Meta(MetadataType.TrackTotal);
         };
         MPlayer.LengthChanged += (sender, args) =>
         {
