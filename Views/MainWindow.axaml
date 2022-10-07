@@ -28,7 +28,7 @@
         <cnv:ConvertActualPlayingMusicBackground x:Key="PlayingMusicBackground" />
         <cnv:ArtConverter x:Key="ArtConverter"></cnv:ArtConverter>
     </Window.Resources>
-    <Border CornerRadius="20" Background="#0F141D" Padding="25" x:Name="AppBorder">
+    <Border CornerRadius="20" Background="#1E252F" Padding="25" x:Name="AppBorder">
         
         <Grid>
             <Grid.RowDefinitions>
