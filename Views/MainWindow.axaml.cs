@@ -4,12 +4,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.ReactiveUI;
 using Avalonia.Styling;
+using DynamicData.Binding;
 using Mp3Player.ViewModels;
 using ReactiveUI;
 
@@ -28,6 +30,22 @@ namespace Mp3Player.Views
             {
               PlatformImpl?.BeginMoveDrag(args);  
             };
+            this.WhenAnyValue(x => x.WindowState)
+                .Subscribe(windowState =>
+                {
+                    var appBorder = this.FindControl<Border>("AppBorder");
+                    if (windowState == WindowState.Maximized)
+                    {
+                    
+                        appBorder.CornerRadius = CornerRadius.Parse("0");
+                    }
+                    else
+                    {
+                        appBorder.CornerRadius = CornerRadius.Parse("20");
+                    }
+                });
+
+
         }
 
         private async Task DoShowNewPlaylistWindowAsync(InteractionContext<NewPlaylistWindowViewModel, PlaylistViewModel> interaction)
@@ -106,12 +124,22 @@ namespace Mp3Player.Views
 
         private void ExitBorder_OnPointerPressed(object? sender, PointerPressedEventArgs e)
         {
+            
             this.Close();
         }
 
-        private void MinimizeBorder_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+        private void MinimizeBorder_OnPointerPressed(object? sender, PointerReleasedEventArgs e)
+        {
+            //var border = sender as Border;
+            //Console.WriteLine(border.Name);
+            WindowState = WindowState.Minimized;
+            e.Handled = true;
+        }
+
+        private void InputElement_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
         {
             WindowState = WindowState.Minimized;
+
         }
     }
 }
