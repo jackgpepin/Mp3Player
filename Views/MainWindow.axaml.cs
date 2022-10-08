@@ -24,7 +24,7 @@ namespace Mp3Player.Views
             this.WhenActivated(d => d(ViewModel!.ShowOpenFileDialog.RegisterHandler(DoShowDialog)));
             this.WhenActivated(d => d(ViewModel!.ShowNewPlaylistWindow.RegisterHandler(DoShowNewPlaylistWindowAsync)));
             this.WhenActivated(d => d(ViewModel!.ShowOpenFolderDialog.RegisterHandler(DoShowOpenFolderDialog)));
-            this.FindControl<Border>("AppBorder").PointerPressed += (sender, args) =>
+            this.FindControl<Canvas>("DragWindowCanvas").PointerPressed += (sender, args) =>
             {
               PlatformImpl?.BeginMoveDrag(args);  
             };
@@ -102,6 +102,16 @@ namespace Mp3Player.Views
         private void Playlists_OnContextRequested(object? sender, ContextRequestedEventArgs e)
         {
             ((MainWindowViewModel) DataContext).ShowPlaylistsContextMenu();
+        }
+
+        private void ExitBorder_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void MinimizeBorder_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
         }
     }
 }

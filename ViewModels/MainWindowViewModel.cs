@@ -154,6 +154,12 @@ namespace Mp3Player.ViewModels
                     _endingMusic = true;
                    Dispatcher.UIThread.InvokeAsync(() =>
                     {
+                        if (LoopMode == LoopMode.RepeatOne)
+                        {
+                            SelectedPlayingMusic.Play();
+                            _endingMusic = false;
+                            return;
+                        }
                         NextCommand.Execute();
                         Debug.WriteLine("END");
                         _endingMusic = false;
@@ -223,6 +229,14 @@ namespace Mp3Player.ViewModels
             set => this.RaiseAndSetIfChanged(ref _playlistsMenuItems, value);
         }
 
+        private LoopMode _loopMode;
+
+        public LoopMode LoopMode
+        {
+            get => _loopMode;
+            set => this.RaiseAndSetIfChanged(ref _loopMode, value);
+        }
+
         public MainWindowViewModel()
         {
             var settings = Settings.Initialize();
@@ -240,7 +254,7 @@ namespace Mp3Player.ViewModels
                 
             }
             _initializePlaylists();
-
+            LoopMode = LoopMode.RepeatAll;
             Console.WriteLine("");
             if (args != null)
             {
@@ -402,6 +416,14 @@ namespace Mp3Player.ViewModels
                 
             });
 
+            ChangeLoopModeCommand = ReactiveCommand.Create(() =>
+            {
+                if (LoopMode == LoopMode.RepeatAll)
+                    LoopMode = LoopMode.RepeatOne;
+                else if (LoopMode == LoopMode.RepeatOne)
+                    LoopMode = LoopMode.RepeatAll;
+            });
+
         }
 
         private void _initializePlaylists()
@@ -474,6 +496,9 @@ namespace Mp3Player.ViewModels
         public ReactiveCommand<Unit, Unit> PreviousCommand { get; set; }
         public ReactiveCommand<Unit, Unit> NextCommand { get; set; }
         public ReactiveCommand<Unit, Unit> AddMusicCommand { get; set; }
+        
+        public ReactiveCommand<Unit, Unit> ChangeLoopModeCommand { get; set; }
+
         public Interaction<Unit, string[]> ShowOpenFileDialog { get; set; }
         public Interaction<Unit, string> ShowOpenFolderDialog { get; set; }
         public ReactiveCommand<Unit, Unit> CreateNewPlaylistCommand { get; set; }

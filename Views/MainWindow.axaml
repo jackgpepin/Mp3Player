@@ -3,6 +3,7 @@
         xmlns:vm="using:Mp3Player.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:bhv="clr-namespace:Mp3Player.Behaviors"
         xmlns:cnv="using:Mp3Player.Converters"
         xmlns:views="clr-namespace:Mp3Player.Views"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="500"
@@ -27,10 +28,18 @@
         <cnv:PlayAndPauseConverter x:Key="PlayAndPauseConverter" />
         <cnv:ConvertActualPlayingMusicBackground x:Key="PlayingMusicBackground" />
         <cnv:ArtConverter x:Key="ArtConverter"></cnv:ArtConverter>
+        <cnv:LoopModeConverter x:Key="LoopModeConverter"/>
     </Window.Resources>
-    <Border CornerRadius="20" Background="#1E252F" Padding="25" x:Name="AppBorder">
-        
+    <Border  CornerRadius="20" Background="#0F141D" Padding="25" x:Name="AppBorder">
+       
         <Grid>
+            <Canvas 
+                x:Name="DragWindowCanvas"
+                Height="50"
+                Margin="0,-35,0,0"
+                Background="#0F141D">
+            
+            </Canvas>
             <Grid.RowDefinitions>
                 <RowDefinition Height="40" />
                 <RowDefinition Height="*" />
@@ -43,7 +52,8 @@
                     Background="Transparent"
                     BorderBrush="#202a3d"
                     BorderThickness="2"
-                    CornerRadius="20" />
+                    CornerRadius="20" 
+                    PointerPressed="MinimizeBorder_OnPointerPressed"/>
                 <Separator Width="5" />
                 <Border
                     Width="15"
@@ -51,8 +61,9 @@
                     Background="Transparent"
                     BorderBrush="#202a3d"
                     BorderThickness="2"
-                    CornerRadius="20">
-
+                    CornerRadius="20"
+                    PointerPressed="ExitBorder_OnPointerPressed">
+    
                 </Border>
             </StackPanel>
             <Grid Grid.Row="1">
@@ -154,7 +165,7 @@
                 <StackPanel Height="40" HorizontalAlignment="Stretch">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Button Background="Transparent" Command="{Binding PreviousCommand}">
-                            <Image Width="20" Source="/Assets/prev.png"></Image>
+                            <Image Width="20" Source="/Assets/prev2.png"></Image>
                         </Button>
                         <Button Background="Transparent" Command="{Binding PlayCommand}">
                             <Image Width="20"
@@ -163,7 +174,7 @@
                         </Button>
 
                         <Button Background="Transparent" Command="{Binding NextCommand}">
-                            <Image Width="20" Source="/Assets/next.png"></Image>
+                            <Image Width="20" Source="/Assets/next2.png"></Image>
                         </Button>
                     </StackPanel>
 
@@ -173,18 +184,31 @@
                     HorizontalAlignment="Right"
                     Margin="0,-40,0,0"
                     Orientation="Horizontal">
-
+                    
+                    <Image
+                        Source="{Binding LoopMode, Converter={StaticResource LoopModeConverter}}"
+                        VerticalAlignment="Center"
+                        Width="20"
+                        Margin="0,0,10,0"
+                        Cursor="Hand"
+                        bhv:DoubleTappedBehav.Command="{Binding ChangeLoopModeCommand}"
+                        ZIndex="2">
+                        
+                    </Image>
+                    
                     <Image
                         VerticalAlignment="Center"
                         Margin="0,0,3,0"
-                        Source="/Assets/volume.png"
+                        Source="/Assets/volume2.png"
                         Width="20" />
                     <Slider
                         VerticalAlignment="Center"
                         Maximum="100"
                         Value="{Binding Volume}"
                         Width="80"
-                        Margin="0,-18,0,0">
+                        Margin="0,-18,0,0"
+                        Background="#414c5c"
+                        Foreground="#414c5c">
                     </Slider>
                 </StackPanel>
                 <Grid>
