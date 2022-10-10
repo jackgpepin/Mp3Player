@@ -29,6 +29,7 @@
         <cnv:ConvertActualPlayingMusicBackground x:Key="PlayingMusicBackground" />
         <cnv:ArtConverter x:Key="ArtConverter"></cnv:ArtConverter>
         <cnv:LoopModeConverter x:Key="LoopModeConverter"/>
+        <cnv:ShuffleConverter x:Key="ShuffleConverter"/>
     </Window.Resources>
     <Border  CornerRadius="20" Background="#0F141D" Padding="25" x:Name="AppBorder">
        
@@ -241,10 +242,19 @@
                     Orientation="Horizontal">
                     
                     <Image
+                        Source="{Binding Shuffle, Converter={StaticResource ShuffleConverter}}"
+                        VerticalAlignment="Center"
+                        Width="20"
+                        Margin="0,0,20,0"
+                        Cursor="Hand"
+                        bhv:DoubleTappedBehav.Command="{Binding ToggleShuffleCommand}"
+                    />
+                    
+                    <Image
                         Source="{Binding LoopMode, Converter={StaticResource LoopModeConverter}}"
                         VerticalAlignment="Center"
                         Width="20"
-                        Margin="0,0,10,0"
+                        Margin="0,0,20,0"
                         Cursor="Hand"
                         bhv:DoubleTappedBehav.Command="{Binding ChangeLoopModeCommand}"
                        >

@@ -237,6 +237,16 @@ namespace Mp3Player.ViewModels
             set => this.RaiseAndSetIfChanged(ref _loopMode, value);
         }
 
+        private bool _shuffle;
+
+        public bool Shuffle
+        {
+            get => _shuffle;
+            set => this.RaiseAndSetIfChanged(ref _shuffle, value);
+        }
+
+        private List<MusicViewModel> _playedMusics;
+        
         public MainWindowViewModel()
         {
             var settings = Settings.Initialize();
@@ -320,35 +330,48 @@ namespace Mp3Player.ViewModels
             });
             SelectMusicCommand = ReactiveCommand.CreateFromTask(async () =>
             {
+                //_playedMusics = new List<MusicViewModel>();
                 Musics = ((MusicsDataGridViewModel) PlaylistContent).Playlist.Musics;
                 SelectedMusic = Musics.First(m => m == ((MusicsDataGridViewModel) PlaylistContent).SelectedMusic);
            
                 SelectedPlayingMusic = SelectedMusic;
                 SelectedPlayingMusic.Play();
+                //_playedMusics.Add
                 _setActualPlayingMusicBackground();
             });
             PreviousCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                int index = Musics.ToList().IndexOf(SelectedPlayingMusic);
-                if ((index - 1) <= Musics.Count && index - 1 >=0)
+                if(Shuffle)
+                    _shuffleMusic();
+                else
                 {
-                    SelectedPlayingMusic = Musics[index-1];
-                    SelectedPlayingMusic.Play();
-                    _setActualPlayingMusicBackground();
+                    int index = Musics.ToList().IndexOf(SelectedPlayingMusic);
+                    if ((index - 1) <= Musics.Count && index - 1 >=0)
+                    {
+                        SelectedPlayingMusic = Musics[index-1];
+                        SelectedPlayingMusic.Play();
+                        _setActualPlayingMusicBackground();
 
+                    }
                 }
                 
             });
             NextCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                int index = Musics.ToList().IndexOf(SelectedPlayingMusic);
-                if ((index + 2) <= Musics.Count)
+                if(Shuffle)
+                    _shuffleMusic();
+                else
                 {
-                    SelectedPlayingMusic = Musics[index+1];
-                    SelectedPlayingMusic.Play();
-                    _setActualPlayingMusicBackground();
+                    int index = Musics.ToList().IndexOf(SelectedPlayingMusic);
+                    if ((index + 2) <= Musics.Count)
+                    {
+                        SelectedPlayingMusic = Musics[index+1];
+                        SelectedPlayingMusic.Play();
+                        _setActualPlayingMusicBackground();
 
+                    }
                 }
+                
             });
             
             RemoveCommand = ReactiveCommand.CreateFromTask(async () =>
@@ -424,8 +447,20 @@ namespace Mp3Player.ViewModels
                     LoopMode = LoopMode.RepeatAll;
             });
 
+            ToggleShuffleCommand = ReactiveCommand.Create(() =>
+            {
+                Shuffle = !Shuffle;
+            });
+
         }
 
+        private void _shuffleMusic()
+        {
+            var index = Random.Shared.NextInt64((long) Musics.Count - 1);
+            SelectedPlayingMusic = Musics[(int)index];
+            SelectedPlayingMusic.Play();
+            _setActualPlayingMusicBackground();
+        }
         private void _initializePlaylists()
         {
             Playlists = new ObservableCollection<PlaylistViewModel>();
@@ -498,6 +533,7 @@ namespace Mp3Player.ViewModels
         public ReactiveCommand<Unit, Unit> AddMusicCommand { get; set; }
         
         public ReactiveCommand<Unit, Unit> ChangeLoopModeCommand { get; set; }
+        public ReactiveCommand<Unit, Unit> ToggleShuffleCommand { get; set; }
 
         public Interaction<Unit, string[]> ShowOpenFileDialog { get; set; }
         public Interaction<Unit, string> ShowOpenFolderDialog { get; set; }
