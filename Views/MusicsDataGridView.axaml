@@ -26,8 +26,7 @@
             Tapped="DataGrid_OnTapped"
             IsReadOnly="True"
             AutoGenerateColumns="False"
-            
-        >
+            HorizontalScrollBarVisibility="Auto">
             <DataGrid.Styles>
                 <Style Selector="DataGridColumnHeader">
                     <Setter Property="Background" Value="Transparent" />

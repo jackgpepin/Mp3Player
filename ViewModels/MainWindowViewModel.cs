@@ -133,6 +133,7 @@ namespace Mp3Player.ViewModels
                 this.RaiseAndSetIfChanged(ref _selectedPlayingMusic, value);
                 if (SelectedPlayingMusic != null)
                 {
+                    SelectedPlayingMusic.MPlayer.Mute = Muted;
                     var a = SelectedPlayingMusic.MPlayer.Media.Meta(MetadataType.Album);
                     Console.WriteLine();
                 }
@@ -238,13 +239,28 @@ namespace Mp3Player.ViewModels
         }
 
         private bool _shuffle;
-
         public bool Shuffle
         {
             get => _shuffle;
             set => this.RaiseAndSetIfChanged(ref _shuffle, value);
         }
 
+        private bool _muted = false;
+        public bool Muted
+        {
+            get => _muted;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _muted, value);
+                if (Musics != null)
+                {
+                    foreach (var music in Musics)
+                    {
+                        music.MPlayer.Mute = Muted;
+                    }
+                }
+            }
+        }
         private List<MusicViewModel> _playedMusics;
         
         public MainWindowViewModel()
@@ -452,6 +468,11 @@ namespace Mp3Player.ViewModels
                 Shuffle = !Shuffle;
             });
 
+            ToggleMutedCommand = ReactiveCommand.Create(() =>
+            {
+                Muted = !Muted;
+            });
+
         }
 
         private void _shuffleMusic()
@@ -534,6 +555,7 @@ namespace Mp3Player.ViewModels
         
         public ReactiveCommand<Unit, Unit> ChangeLoopModeCommand { get; set; }
         public ReactiveCommand<Unit, Unit> ToggleShuffleCommand { get; set; }
+        public ReactiveCommand<Unit, Unit> ToggleMutedCommand { get; set; }
 
         public Interaction<Unit, string[]> ShowOpenFileDialog { get; set; }
         public Interaction<Unit, string> ShowOpenFolderDialog { get; set; }
