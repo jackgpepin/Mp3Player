@@ -16,17 +16,17 @@ public class MusicViewModel:ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _title, value);
     }
 
-    private string _artist;
+    private string _artist = "Unknown";
     public string Artist
     {
-        get => _artist;
+        get => _artist ?? "Unknown";
         set => this.RaiseAndSetIfChanged(ref _artist, value);
     }
 
     private string _album;
     public string Album
     {
-        get => _album;
+        get => _album ?? "Unknown";
         set => this.RaiseAndSetIfChanged(ref _album, value);
     }
 
@@ -56,7 +56,7 @@ public class MusicViewModel:ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _mPlayer, value);
     }
 
-    private bool _isNowPlaying;
+    private bool _isNowPlaying = false;
     public bool IsNowPlaying
     {
         get => _isNowPlaying;

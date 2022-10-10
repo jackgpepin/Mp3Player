@@ -155,13 +155,65 @@
                     </Grid>
                 </Grid>
                 <Separator Grid.Column="1" Background="#222222" />
-                <Grid Grid.Column="2">
+                <Grid Grid.Column="2" Margin="10,0,0,0">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="20" />
+                        <RowDefinition Height="180" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-
-                    <UserControl Grid.Row="1" Content="{Binding PlaylistContent}" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="190"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Border HorizontalAlignment="Left" CornerRadius="10" ClipToBounds="True" Width="170">
+                            <Panel Background="White">
+                                <Image 
+                                    Source="/Assets/Album.jpg"
+                                    Stretch="Fill">
+                                    <Image.Styles>
+                                        <Style Selector="Image /template/Border">
+                                            <Setter Property="Background" Value="Red" />
+                                        </Style>
+                                    </Image.Styles>
+                                </Image>
+                            </Panel>
+                        </Border>
+                        <Panel Grid.Column="1" >
+                            <Panel  VerticalAlignment="Top">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock 
+                                        Text="PLAYLIST"
+                                        Foreground="#414c5c"
+                                        />
+                                    <TextBlock 
+                                        Text="..."
+                                        Cursor="Hand"
+                                        FontWeight="UltraBold"
+                                        FontSize="25"
+                                        Foreground="#414c5c"
+                                        Margin="5,-14,0,0"
+                                        />
+                                </StackPanel>
+                            </Panel>
+                            <StackPanel VerticalAlignment="Bottom">
+                                <TextBlock 
+                                    Text="{Binding SelectedPlaylist.Name}"
+                                    FontSize="35"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                    <TextBlock 
+                                        Text="Created by"
+                                        Foreground="#414c5c"
+                                        />
+                                    <TextBlock 
+                                        Text="You"
+                                        Margin="5,0,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Panel>
+                    </Grid>
+                    <UserControl
+                        Margin="0,20,0,0" 
+                        Grid.Row="1" Content="{Binding PlaylistContent}" />
                 </Grid>
             </Grid>
             <StackPanel Grid.Row="2" VerticalAlignment="Center">
@@ -211,7 +263,9 @@
                         Width="80"
                         Margin="0,-18,0,0"
                         Background="#414c5c"
-                        Foreground="#414c5c">
+                        Foreground="#414c5c"
+                        >
+                        
                     </Slider>
                 </StackPanel>
                 <Grid>

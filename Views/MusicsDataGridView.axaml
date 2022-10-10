@@ -3,15 +3,19 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:Mp3Player.ViewModels"
+             xmlns:conv="using:Mp3Player.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Mp3Player.Views.MusicsDataGridView">
+    <UserControl.Resources>
+        <conv:ConvertActualPlayingMusicBackground x:Key="ActualPlayingMusicBackgroundConverter"/>
+    </UserControl.Resources>
     <Grid>
         <DataGrid
-        
             LoadingRow="DataGrid_OnLoadingRow"
             SelectionChanged="DataGrid_OnSelectionChanged"
             ContextRequested="Control_OnContextRequested"
             Background="Transparent"
+            ColumnWidth="*"
             DragDrop.AllowDrop="True"
             CanUserReorderColumns="False"
             CanUserSortColumns="False"
@@ -21,19 +25,62 @@
             DoubleTapped="DataGrid_OnDoubleTapped"
             Tapped="DataGrid_OnTapped"
             IsReadOnly="True"
-            AutoGenerateColumns="False">
+            AutoGenerateColumns="False"
+            
+        >
             <DataGrid.Styles>
-
                 <Style Selector="DataGridColumnHeader">
                     <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="AreSeparatorsVisible" Value="False"/>
                 </Style>
-                <Style Selector="DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
-                    <Setter Property="Fill" Value="gray" />
-                </Style>
-                <Style Selector="DataGridRow:selected /template/ Rectangle#BackgroundRectangle">
-                    <Setter Property="Fill" Value="#333" />
-                </Style>
+                <Style Selector="DataGridRow">
+                    <Setter Property="Cursor" Value="Hand"/>
+                    <Setter Property="Padding" Value="50"/>
+                    <Setter Property="Template">
+                        <ControlTemplate>
+                            <DataGridFrozenGrid Name="PART_Root"
+                                                RowDefinitions="*,Auto,Auto"
+                                                ColumnDefinitions="Auto,*">
 
+                                <Border 
+                                            Margin="0,0,0,2"
+                                            Name="BackgroundBorder"
+                                           Grid.RowSpan="2"
+                                           Grid.ColumnSpan="2" />
+                                <Rectangle x:Name="InvalidVisualElement"
+                                           Grid.ColumnSpan="2"
+                                           Fill="{DynamicResource DataGridRowInvalidBrush}" />
+
+                                <DataGridRowHeader Name="PART_RowHeader"
+                                                   Grid.RowSpan="3"
+                                                   DataGridFrozenGrid.IsFrozen="True" />
+                                <DataGridCellsPresenter Name="PART_CellsPresenter"
+                                                        Grid.Column="1"
+                                                        DataGridFrozenGrid.IsFrozen="True" />
+                                <DataGridDetailsPresenter Name="PART_DetailsPresenter"
+                                                          Grid.Row="1"
+                                                          Grid.Column="1"
+                                                          Background="{DynamicResource DataGridDetailsPresenterBackgroundBrush}" />
+                                <Rectangle Name="PART_BottomGridLine"
+                                           Grid.Row="2"
+                                           Grid.Column="1"
+                                           HorizontalAlignment="Stretch"
+                                           Height="1" />
+
+                            </DataGridFrozenGrid>
+                        </ControlTemplate>
+                    </Setter>
+                </Style>
+                <Style Selector="DataGridRow:pointerover /template/ Border#BackgroundBorder">
+                    <Setter Property="Background" Value="#1f2631" />
+                    <Setter Property="CornerRadius" Value="10"/>
+                </Style>
+                <Style Selector="DataGridRow:selected /template/ Border#BackgroundBorder">
+                    <Setter Property="Background" Value="#272f40" />
+                    <Setter Property="CornerRadius" Value="10"/>
+
+                </Style>
+               
             </DataGrid.Styles>
             <DataGrid.ContextMenu>
                 <ContextMenu Items="{Binding ContextMenuItems}">
@@ -43,25 +90,71 @@
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="">
+                <DataGridTemplateColumn 
+                    Width="300"
+                    Header="Title">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                Padding="10"
+                                Text="Title"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
                     <DataTemplate>
-                        <Grid IsVisible="{Binding IsNowPlaying}" HorizontalAlignment="Center"
-                              VerticalAlignment="Center">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="10" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="10" />
-                            </Grid.ColumnDefinitions>
-                            <Border Background="Green" CornerRadius="10" />
-                        </Grid>
+                            <Border CornerRadius="20">
+                                <TextBlock
+                                    Padding="10"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Foreground="{Binding IsNowPlaying, Converter={StaticResource ActualPlayingMusicBackgroundConverter}}"
+                                    Text="{Binding Title}"/>
+                            </Border>
                     </DataTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Width="300" Header="Title" Binding="{Binding Title}" />
-                <DataGridTextColumn Header="Artist" Binding="{Binding Artist}" />
-                <DataGridTextColumn Header="Album" Binding="{Binding Album}" />
+                <DataGridTemplateColumn 
+                    Width="*"
+                    Header="Artist">
+                    <DataTemplate>
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                Foreground="{Binding IsNowPlaying, Converter={StaticResource ActualPlayingMusicBackgroundConverter}}"
+                                Text="{Binding Artist}"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn 
+                    Width="*"
+                    Header="Album">
+                    <DataTemplate>
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                Foreground="{Binding IsNowPlaying, Converter={StaticResource ActualPlayingMusicBackgroundConverter}}"
+                                Text="{Binding Album}"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn>
 
-                <DataGridTextColumn Header="Duration" Binding="{Binding Duration.Formated}" />
+                <DataGridTemplateColumn
+                    Width="100">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock 
+                                Padding="0,0,0,0"
+                                Margin="0,0,20,0"
+                                TextAlignment="Right"
+                                Width="100" Text="Duration" 
+                                HorizontalAlignment="Right"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataTemplate>
+                            <TextBlock
+                                Padding="0,0,20,0"
+                                Margin="0,0,20,0"
+                                VerticalAlignment="Center"
+                                Foreground="{Binding IsNowPlaying, Converter={StaticResource ActualPlayingMusicBackgroundConverter}}"
+                                HorizontalAlignment="Right"
+                                TextAlignment="Right"
+                                Text="{Binding Duration.Formated}"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn>
 
             </DataGrid.Columns>
 
