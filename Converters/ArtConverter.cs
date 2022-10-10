@@ -15,7 +15,7 @@ public class ArtConverter : IValueConverter
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-        var bitmap = new Bitmap(assets.Open(new Uri(@"avares://Mp3Player/Assets/Album.jpg")));
+        var bitmap = new Bitmap(assets.Open(new Uri(@"avares://Mp3Player/Assets/mp3.jpg")));
         if (value == null)
             return bitmap;
 

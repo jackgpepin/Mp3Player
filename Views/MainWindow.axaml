@@ -167,8 +167,8 @@
                         </Grid.ColumnDefinitions>
                         <Border HorizontalAlignment="Left" CornerRadius="10" ClipToBounds="True" Width="170">
                             <Panel Background="White">
-                                <Image 
-                                    Source="/Assets/Album.jpg"
+                                <Image
+                                    Source="/Assets/mp3.jpg"
                                     Stretch="Fill">
                                     <Image.Styles>
                                         <Style Selector="Image /template/Border">

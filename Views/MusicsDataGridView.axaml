@@ -78,7 +78,6 @@
                 <Style Selector="DataGridRow:selected /template/ Border#BackgroundBorder">
                     <Setter Property="Background" Value="#272f40" />
                     <Setter Property="CornerRadius" Value="10"/>
-
                 </Style>
                
             </DataGrid.Styles>
