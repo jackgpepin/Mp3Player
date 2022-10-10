@@ -31,5 +31,6 @@
   <ItemGroup>
     <Content Include="Screenshots\MP3Player.png" />
     <Content Include="Screenshots\S2.png" />
+    <Content Include="Screenshots\S3.png" />
   </ItemGroup>
 </Project>
