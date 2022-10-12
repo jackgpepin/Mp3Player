@@ -134,6 +134,7 @@ namespace Mp3Player.ViewModels
                 if (SelectedPlayingMusic != null)
                 {
                     SelectedPlayingMusic.MPlayer.Mute = Muted;
+                    SelectedPlayingMusic.MPlayer.SetEqualizer(EqualizerWindowViewModel.Equalizer);
                     var a = SelectedPlayingMusic.MPlayer.Media.Meta(MetadataType.Album);
                     Console.WriteLine();
                 }
@@ -262,6 +263,14 @@ namespace Mp3Player.ViewModels
             }
         }
         private List<MusicViewModel> _playedMusics;
+
+        private EqualizerWindowViewModel _equalizerWindowViewModel;
+
+        public EqualizerWindowViewModel EqualizerWindowViewModel
+        {
+            get => _equalizerWindowViewModel;
+            set => this.RaiseAndSetIfChanged(ref _equalizerWindowViewModel, value);
+        }
         
         public MainWindowViewModel()
         {
@@ -271,6 +280,7 @@ namespace Mp3Player.ViewModels
             try
             {
                 _libVlc = new LibVLC(enableDebugLogs: true);
+                EqualizerWindowViewModel = new EqualizerWindowViewModel();
                 Musics = new ObservableCollection<MusicViewModel>()
                 {
                 };
@@ -473,6 +483,11 @@ namespace Mp3Player.ViewModels
                 Muted = !Muted;
             });
 
+            ShowEqualizerDialog = new Interaction<EqualizerWindowViewModel, Unit>();
+            OpenEqualizerCommand = ReactiveCommand.CreateFromTask(async () =>
+            {
+                await ShowEqualizerDialog.Handle(EqualizerWindowViewModel);
+            });
         }
 
         private void _shuffleMusic()
@@ -556,6 +571,8 @@ namespace Mp3Player.ViewModels
         public ReactiveCommand<Unit, Unit> ChangeLoopModeCommand { get; set; }
         public ReactiveCommand<Unit, Unit> ToggleShuffleCommand { get; set; }
         public ReactiveCommand<Unit, Unit> ToggleMutedCommand { get; set; }
+        public ReactiveCommand<Unit, Unit> OpenEqualizerCommand { get; set; }
+        public Interaction<EqualizerWindowViewModel, Unit> ShowEqualizerDialog { get; set; } 
 
         public Interaction<Unit, string[]> ShowOpenFileDialog { get; set; }
         public Interaction<Unit, string> ShowOpenFolderDialog { get; set; }

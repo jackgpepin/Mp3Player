@@ -85,7 +85,7 @@ public class MusicViewModel:ViewModelBase
         _media = new Media(libVlc, Path);
         _media.Parse(MediaParseOptions.ParseLocal);
         MPlayer = new MediaPlayer(_media);
-        
+
         //MPlayer.Play(media);
         _media.Parse();
         _media.ParsedChanged += (sender, args) =>

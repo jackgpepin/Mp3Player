@@ -26,6 +26,7 @@ namespace Mp3Player.Views
             this.WhenActivated(d => d(ViewModel!.ShowOpenFileDialog.RegisterHandler(DoShowDialog)));
             this.WhenActivated(d => d(ViewModel!.ShowNewPlaylistWindow.RegisterHandler(DoShowNewPlaylistWindowAsync)));
             this.WhenActivated(d => d(ViewModel!.ShowOpenFolderDialog.RegisterHandler(DoShowOpenFolderDialog)));
+            this.WhenActivated(d => d(ViewModel!.ShowEqualizerDialog.RegisterHandler(DoShowEqualizerDialog)));
             this.FindControl<Canvas>("DragWindowCanvas").PointerPressed += (sender, args) =>
             {
               PlatformImpl?.BeginMoveDrag(args);  
@@ -85,10 +86,17 @@ namespace Mp3Player.Views
             var folder = await dialog.ShowAsync(this);
             interactionContext.SetOutput(folder);
         }
+
+        private async Task DoShowEqualizerDialog(InteractionContext<EqualizerWindowViewModel, Unit> interactionContext)
+        {
+            var dialog = new EqualizerWindow();
+            dialog.DataContext = interactionContext.Input;
+            await dialog.ShowDialog(this);
+            interactionContext.SetOutput(Unit.Default);
+        }
         private async void MenuItem_ExitOnClick(object? sender, RoutedEventArgs e)
         {   
             this.Close();
-            
         }
         private void Control_OnContextRequested(object? sender, ContextRequestedEventArgs e)
         {

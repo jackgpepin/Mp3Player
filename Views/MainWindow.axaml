@@ -241,7 +241,14 @@
                     HorizontalAlignment="Right"
                     Margin="0,-40,0,0"
                     Orientation="Horizontal">
-                    
+                    <Image
+                        Source="/Assets/sound-controller.png"
+                        VerticalAlignment="Center"
+                        Width="20"
+                        Margin="0,0,20,0"
+                        Cursor="Hand"
+                        bhv:DoubleTappedBehav.Command="{Binding OpenEqualizerCommand}"
+                    />
                     <Image
                         Source="{Binding Shuffle, Converter={StaticResource ShuffleConverter}}"
                         VerticalAlignment="Center"
