@@ -14,11 +14,24 @@
         ExtendClientAreaChromeHints="NoChrome"
         ExtendClientAreaTitleBarHeightHint="-1"
         Width="420"
-        Height="450">
+        Height="450"
+        CanResize="False"
+        MaxWidth="420"
+        WindowStartupLocation="CenterOwner"
+        >
     <Border CornerRadius="10" Background="#1E252F" Padding="10" x:Name="AppBorder">
-
+        
         <Panel >
-            <TextBlock VerticalAlignment="Top" Text="Equalizer" TextAlignment="Center" FontSize="20"/>
+            <Canvas 
+                Background="Transparent"
+                VerticalAlignment="Top"
+                Height="40"
+                Margin="0,-8,0,0"
+                x:Name="Canvas"
+                ZIndex="1">
+                
+            </Canvas>
+            <TextBlock ZIndex="0" VerticalAlignment="Top" Text="Equalizer" TextAlignment="Center" FontSize="20"/>
             <StackPanel Orientation="Horizontal" Margin="0,40,0,0">
                 <StackPanel.Styles>
                     <Style Selector="StackPanel > StackPanel">
