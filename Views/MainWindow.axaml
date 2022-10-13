@@ -185,6 +185,16 @@
                                         HorizontalAlignment="Left"
                                         BorderThickness="0">
                                         <TextBox.Styles>
+                                            <Style Selector="TextBox:pointerover">
+                                                <Setter Property="Background" Value="Red"/>
+                                            </Style>
+                                            <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
+                                                <Setter Property="Background" Value="Transparent"/>
+                                            </Style>
+                                            <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+                                                <Setter Property="Background" Value="Transparent"/>
+                                                <Setter Property="BorderThickness" Value="0"/>
+                                            </Style>
                                             <Style Selector="TextBox">
                                                 <Setter Property="Template">
                                                     <ControlTemplate>
