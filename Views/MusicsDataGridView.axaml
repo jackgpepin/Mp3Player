@@ -21,7 +21,7 @@
             CanUserSortColumns="False"
             Grid.Row="1"
             SelectedItem="{Binding SelectedMusic}"
-            Items="{Binding Playlist.Musics}"
+            Items="{Binding Playlist.FilteredMusics}"
             DoubleTapped="DataGrid_OnDoubleTapped"
             Tapped="DataGrid_OnTapped"
             IsReadOnly="True"

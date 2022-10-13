@@ -28,38 +28,27 @@
         <cnv:PlayAndPauseConverter x:Key="PlayAndPauseConverter" />
         <cnv:ConvertActualPlayingMusicBackground x:Key="PlayingMusicBackground" />
         <cnv:ArtConverter x:Key="ArtConverter"></cnv:ArtConverter>
-        <cnv:LoopModeConverter x:Key="LoopModeConverter"/>
-        <cnv:ShuffleConverter x:Key="ShuffleConverter"/>
-        <cnv:MuteConverter x:Key="MuteConverter"/>
+        <cnv:LoopModeConverter x:Key="LoopModeConverter" />
+        <cnv:ShuffleConverter x:Key="ShuffleConverter" />
+        <cnv:MuteConverter x:Key="MuteConverter" />
     </Window.Resources>
-    <Border  CornerRadius="20" Background="#0F141D" Padding="25" x:Name="AppBorder">
-       
+    <Border CornerRadius="20" Background="#0F141D" Padding="25" x:Name="AppBorder">
+
         <Grid>
-            <Canvas 
+            <Canvas
                 x:Name="DragWindowCanvas"
                 Height="30"
                 Margin="0,-54,0,0"
                 Background="#0F141D">
-            
+
             </Canvas>
             <Grid.RowDefinitions>
                 <RowDefinition Height="40" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="100" />
             </Grid.RowDefinitions>
-            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                <Border
-                    Width="15"
-                    Height="15"
-                    Background="Transparent"
-                    BorderBrush="#202a3d"
-                    BorderThickness="2"
-                    CornerRadius="20" 
-                    x:Name="Minimize"
-                    PointerReleased="MinimizeBorder_OnPointerPressed">
-                    
-                </Border>
-                <Separator Width="5" />
+            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+
                 <Border
                     Width="15"
                     Height="15"
@@ -68,7 +57,20 @@
                     BorderThickness="2"
                     CornerRadius="20"
                     PointerPressed="ExitBorder_OnPointerPressed">
-                    
+
+                </Border>
+                <Separator Width="5" />
+
+                <Border
+                    Width="15"
+                    Height="15"
+                    Background="Transparent"
+                    BorderBrush="#202a3d"
+                    BorderThickness="2"
+                    CornerRadius="20"
+                    x:Name="Minimize"
+                    PointerReleased="MinimizeBorder_OnPointerPressed">
+
                 </Border>
             </StackPanel>
             <Grid Grid.Row="1">
@@ -82,7 +84,7 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="200" />
                     </Grid.RowDefinitions>
-                    <Grid >
+                    <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="20" />
                             <RowDefinition Height="Auto" />
@@ -115,7 +117,7 @@
                                 <Style Selector="Button">
                                     <Setter Property="Background" Value="Transparent" />
                                     <Setter Property="Foreground" Value="#ccc" />
-                                    <Setter Property="Margin" Value="0,0,0,0"/>
+                                    <Setter Property="Margin" Value="0,0,0,0" />
                                 </Style>
                                 <Style Selector="Button:pressed /template/ ContentPresenter#PART_ContentPresenter">
                                     <Setter Property="Background" Value="Red" />
@@ -138,7 +140,7 @@
 
                         <Border CornerRadius="10" ClipToBounds="True" Width="170">
                             <Panel Background="Transparent">
-                                <Image 
+                                <Image
                                     Source="{Binding SelectedPlayingMusic.ArtPath, Converter={StaticResource ArtConverter}}"
                                     Stretch="Fill">
                                     <Image.Styles>
@@ -163,58 +165,185 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="190"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Border HorizontalAlignment="Left" CornerRadius="10" ClipToBounds="True" Width="170">
-                            <Panel Background="White">
-                                <Image
-                                    Source="/Assets/mp3.jpg"
-                                    Stretch="Fill">
-                                    <Image.Styles>
-                                        <Style Selector="Image /template/Border">
-                                            <Setter Property="Background" Value="Red" />
-                                        </Style>
-                                    </Image.Styles>
-                                </Image>
-                            </Panel>
-                        </Border>
-                        <Panel Grid.Column="1" >
-                            <Panel  VerticalAlignment="Top">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock 
-                                        Text="PLAYLIST"
-                                        Foreground="#414c5c"
-                                        />
-                                    <TextBlock 
-                                        Text="..."
-                                        Cursor="Hand"
-                                        FontWeight="UltraBold"
-                                        FontSize="25"
-                                        Foreground="#414c5c"
-                                        Margin="5,-14,0,0"
-                                        />
-                                </StackPanel>
-                            </Panel>
-                            <StackPanel VerticalAlignment="Bottom">
-                                <TextBlock 
-                                    Text="{Binding SelectedPlaylist.Name}"
-                                    FontSize="35"/>
-                                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                    <TextBlock 
-                                        Text="Created by"
-                                        Foreground="#414c5c"
-                                        />
-                                    <TextBlock 
-                                        Text="You"
-                                        Margin="5,0,0,0"/>
-                                </StackPanel>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Panel>
+                            <Border
+                                CornerRadius="10"
+                                HorizontalAlignment="Left"
+                                Background="Transparent"
+                                BorderThickness="1.5"
+                                BorderBrush="#303446">
+                                <Panel>
+                                    <TextBox
+                                        Text="{Binding SelectedPlaylist.Search}"
+                                        Width="200"
+                                        Watermark="Search"
+                                        Background="Transparent"
+                                        HorizontalAlignment="Left"
+                                        BorderThickness="0">
+                                        <TextBox.Styles>
+                                            <Style Selector="TextBox">
+                                                <Setter Property="Template">
+                                                    <ControlTemplate>
+                                                        <DataValidationErrors>
+                                                            <Panel>
+                                                                <Border
+                                                                    Name="PART_BorderElement"
+                                                                    Background="{TemplateBinding Background}"
+                                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                                    CornerRadius="{TemplateBinding CornerRadius}"
+                                                                    MinWidth="{TemplateBinding MinWidth}"
+                                                                    MinHeight="{TemplateBinding MinHeight}">
+                                                                </Border>
+
+                                                                <Border
+                                                                    Margin="{TemplateBinding BorderThickness}">
+                                                                    <Grid ColumnDefinitions="Auto,*,Auto, 30">
+                                                                        <ContentPresenter Grid.Column="0"
+                                                                            Grid.ColumnSpan="1"
+                                                                            Content="{TemplateBinding InnerLeftContent}" />
+                                                                        
+                                                                        <DockPanel x:Name="PART_InnerDockPanel"
+                                                                            Grid.Column="1"
+                                                                            Grid.ColumnSpan="1"
+                                                                            Cursor="IBeam"
+                                                                            Margin="{TemplateBinding Padding}">
+                                                                            <TextBlock Name="PART_FloatingWatermark"
+                                                                                Foreground="{DynamicResource SystemAccentColor}"
+                                                                                FontSize="{TemplateBinding FontSize}"
+                                                                                IsVisible="False"
+                                                                                Text="{TemplateBinding Watermark}"
+                                                                                DockPanel.Dock="Top" />
+                                                                            <ScrollViewer
+                                                                                HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
+                                                                                VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}"
+                                                                                AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}">
+                                                                                <Panel>
+                                                                                    <TextBlock Name="PART_Watermark"
+                                                                                        Opacity="0.5"
+                                                                                        Text="{TemplateBinding Watermark}"
+                                                                                        TextAlignment="{TemplateBinding TextAlignment}"
+                                                                                        TextWrapping="{TemplateBinding TextWrapping}"
+                                                                                        IsVisible="{TemplateBinding Text, Converter={x:Static StringConverters.IsNullOrEmpty}}"
+                                                                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                                                                    <TextPresenter
+                                                                                        ZIndex="0"
+                                                                                        Name="PART_TextPresenter"
+                                                                                        Text="{TemplateBinding Text, Mode=TwoWay}"
+                                                                                        CaretIndex="{TemplateBinding CaretIndex}"
+                                                                                        SelectionStart="{TemplateBinding SelectionStart}"
+                                                                                        SelectionEnd="{TemplateBinding SelectionEnd}"
+                                                                                        TextAlignment="{TemplateBinding TextAlignment}"
+                                                                                        TextWrapping="{TemplateBinding TextWrapping}"
+                                                                                        PasswordChar="{TemplateBinding PasswordChar}"
+                                                                                        RevealPassword="{TemplateBinding RevealPassword}"
+                                                                                        SelectionBrush="{TemplateBinding SelectionBrush}"
+                                                                                        SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                                                                        CaretBrush="{TemplateBinding CaretBrush}"
+                                                                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                                                                </Panel>
+                                                                            </ScrollViewer>
+                                                                        </DockPanel>
+                                                                        <ContentPresenter Grid.Column="2"
+                                                                            Grid.ColumnSpan="1"
+                                                                            Content="{TemplateBinding InnerRightContent}" />
+                                                                        <Panel Grid.Column="3">
+                                                                            <Image 
+                                                                                Width="40"
+                                                                                Height="18"
+                                                                                VerticalAlignment="Center"
+                                                                                Margin="0,0,12,0"
+                                                                                Source="/Assets/search.png"
+                                                                                HorizontalAlignment="Right"/>
+                                                                        </Panel>
+                                                                    </Grid>
+                                                                </Border>
+                                                            </Panel>
+                                                        </DataValidationErrors>
+                                                    </ControlTemplate>
+                                                </Setter>
+                                            </Style>
+                                        </TextBox.Styles>
+                                    </TextBox>
+                                </Panel>
+                            </Border>
+                            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                                <ComboBox>
+                                </ComboBox>
+                                <Border
+                                    Margin="5,0,0,0"
+                                    CornerRadius="100"
+                                    Background="#303846"
+                                    Width="30"
+                                    Height="30">
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        FontSize="20"
+                                        Text="D">
+
+                                    </TextBlock>
+                                </Border>
                             </StackPanel>
                         </Panel>
+                        <Grid Grid.Row="1" Margin="0,10,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="190" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Border HorizontalAlignment="Left" CornerRadius="10" ClipToBounds="True" Width="170">
+                                <Panel Background="White">
+                                    <Image
+                                        Source="/Assets/mp3.jpg"
+                                        Stretch="Fill">
+                                        <Image.Styles>
+                                            <Style Selector="Image /template/Border">
+                                                <Setter Property="Background" Value="Red" />
+                                            </Style>
+                                        </Image.Styles>
+                                    </Image>
+                                </Panel>
+                            </Border>
+                            <Panel Grid.Column="1">
+                                <Panel VerticalAlignment="Top">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock
+                                            Text="PLAYLIST"
+                                            Foreground="#414c5c" />
+                                        <TextBlock
+                                            Text="..."
+                                            Cursor="Hand"
+                                            FontWeight="UltraBold"
+                                            FontSize="25"
+                                            Foreground="#414c5c"
+                                            Margin="5,-14,0,0" />
+                                    </StackPanel>
+                                </Panel>
+                                <StackPanel VerticalAlignment="Bottom">
+                                    <TextBlock
+                                        Text="{Binding SelectedPlaylist.Name}"
+                                        FontSize="35" />
+                                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                        <TextBlock
+                                            Text="Created by"
+                                            Foreground="#414c5c" />
+                                        <TextBlock
+                                            Text="You"
+                                            Margin="5,0,0,0" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Panel>
+                        </Grid>
+
                     </Grid>
                     <UserControl
-                        Margin="0,20,0,0" 
+                        Margin="0,20,0,0"
                         Grid.Row="1" Content="{Binding PlaylistContent}" />
                 </Grid>
             </Grid>
@@ -247,35 +376,32 @@
                         Width="20"
                         Margin="0,0,20,0"
                         Cursor="Hand"
-                        bhv:DoubleTappedBehav.Command="{Binding OpenEqualizerCommand}"
-                    />
+                        bhv:DoubleTappedBehav.Command="{Binding OpenEqualizerCommand}" />
                     <Image
                         Source="{Binding Shuffle, Converter={StaticResource ShuffleConverter}}"
                         VerticalAlignment="Center"
                         Width="20"
                         Margin="0,0,20,0"
                         Cursor="Hand"
-                        bhv:DoubleTappedBehav.Command="{Binding ToggleShuffleCommand}"
-                    />
-                    
+                        bhv:DoubleTappedBehav.Command="{Binding ToggleShuffleCommand}" />
+
                     <Image
                         Source="{Binding LoopMode, Converter={StaticResource LoopModeConverter}}"
                         VerticalAlignment="Center"
                         Width="20"
                         Margin="0,0,20,0"
                         Cursor="Hand"
-                        bhv:DoubleTappedBehav.Command="{Binding ChangeLoopModeCommand}"
-                       >
-                        
+                        bhv:DoubleTappedBehav.Command="{Binding ChangeLoopModeCommand}">
+
                     </Image>
-                    
+
                     <Image
                         VerticalAlignment="Center"
                         Margin="0,0,5,0"
                         Source="{Binding Muted, Converter={StaticResource MuteConverter}}"
                         Width="20"
                         Cursor="Hand"
-                        bhv:DoubleTappedBehav.Command="{Binding ToggleMutedCommand}"/>
+                        bhv:DoubleTappedBehav.Command="{Binding ToggleMutedCommand}" />
                     <Slider
                         VerticalAlignment="Center"
                         Maximum="100"
@@ -283,9 +409,8 @@
                         Width="80"
                         Margin="0,-18,0,0"
                         Background="#414c5c"
-                        Foreground="#414c5c"
-                        >
-                        
+                        Foreground="#414c5c">
+
                     </Slider>
                 </StackPanel>
                 <Grid>
@@ -294,11 +419,11 @@
                         <RowDefinition Height="22" />
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <Slider 
+                    <Slider
                         Grid.Row="0"
-                        Maximum="1" 
+                        Maximum="1"
                         Value="{Binding Position}"
-                        Margin="0,-20,0,0" 
+                        Margin="0,-20,0,0"
                         Grid.Column="1"
                         HorizontalAlignment="Stretch">
                     </Slider>
@@ -309,8 +434,8 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="70" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock 
-                            Grid.Column="0" 
+                        <TextBlock
+                            Grid.Column="0"
                             Foreground="#444e5f"
                             FontWeight="Medium"
                             Text="{Binding ActualTime.Formated}" />

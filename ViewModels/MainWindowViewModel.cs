@@ -357,7 +357,7 @@ namespace Mp3Player.ViewModels
             SelectMusicCommand = ReactiveCommand.CreateFromTask(async () =>
             {
                 //_playedMusics = new List<MusicViewModel>();
-                Musics = ((MusicsDataGridViewModel) PlaylistContent).Playlist.Musics;
+                Musics = ((MusicsDataGridViewModel) PlaylistContent).Playlist.FilteredMusics;
                 SelectedMusic = Musics.First(m => m == ((MusicsDataGridViewModel) PlaylistContent).SelectedMusic);
            
                 SelectedPlayingMusic = SelectedMusic;
