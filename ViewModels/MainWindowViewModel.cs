@@ -271,7 +271,26 @@ namespace Mp3Player.ViewModels
             get => _equalizerWindowViewModel;
             set => this.RaiseAndSetIfChanged(ref _equalizerWindowViewModel, value);
         }
-        
+
+        private ObservableCollection<string> _profiles = new ObservableCollection<string>()
+        {
+            "Default",
+            "Denilson",
+            "Party"
+        };
+        public ObservableCollection<string> Profiles
+        {
+            get => _profiles;
+            set => this.RaiseAndSetIfChanged(ref _profiles, value);
+        }
+
+        private string _selectedProfile;
+
+        public string SelectedProfile
+        {
+            get => _selectedProfile;
+            set => this.RaiseAndSetIfChanged(ref _selectedProfile, value);
+        }
         public MainWindowViewModel()
         {
             var settings = Settings.Initialize();

@@ -186,14 +186,14 @@
                                         BorderThickness="0">
                                         <TextBox.Styles>
                                             <Style Selector="TextBox:pointerover">
-                                                <Setter Property="Background" Value="Red"/>
+                                                <Setter Property="Background" Value="Red" />
                                             </Style>
                                             <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
-                                                <Setter Property="Background" Value="Transparent"/>
+                                                <Setter Property="Background" Value="Transparent" />
                                             </Style>
                                             <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
-                                                <Setter Property="Background" Value="Transparent"/>
-                                                <Setter Property="BorderThickness" Value="0"/>
+                                                <Setter Property="Background" Value="Transparent" />
+                                                <Setter Property="BorderThickness" Value="0" />
                                             </Style>
                                             <Style Selector="TextBox">
                                                 <Setter Property="Template">
@@ -216,7 +216,7 @@
                                                                         <ContentPresenter Grid.Column="0"
                                                                             Grid.ColumnSpan="1"
                                                                             Content="{TemplateBinding InnerLeftContent}" />
-                                                                        
+
                                                                         <DockPanel x:Name="PART_InnerDockPanel"
                                                                             Grid.Column="1"
                                                                             Grid.ColumnSpan="1"
@@ -264,13 +264,13 @@
                                                                             Grid.ColumnSpan="1"
                                                                             Content="{TemplateBinding InnerRightContent}" />
                                                                         <Panel Grid.Column="3">
-                                                                            <Image 
+                                                                            <Image
                                                                                 Width="40"
                                                                                 Height="18"
                                                                                 VerticalAlignment="Center"
                                                                                 Margin="0,0,12,0"
                                                                                 Source="/Assets/search.png"
-                                                                                HorizontalAlignment="Right"/>
+                                                                                HorizontalAlignment="Right" />
                                                                         </Panel>
                                                                     </Grid>
                                                                 </Border>
@@ -284,7 +284,99 @@
                                 </Panel>
                             </Border>
                             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                                <ComboBox>
+                                <ComboBox 
+                                    BorderThickness="0"
+                                    Background="Transparent"
+                                    VerticalAlignment="Center"
+                                    PlaceholderText="Denny"
+                                    Cursor="Hand"
+                                    Items="{Binding Profiles}"
+                                    SelectedItem="{Binding SelectedProfile}"
+                                    >
+                                    <ComboBox.Styles>
+                                        <Style Selector="ComboBox">
+                                            <Setter Property="Template">
+                                                <ControlTemplate>
+                                                    <DataValidationErrors>
+                                                        <Grid ColumnDefinitions="*,32">
+                                                            <Border x:Name="Background"
+                                                                    Grid.Column="0"
+                                                                    Grid.ColumnSpan="2"
+                                                                    Background="{TemplateBinding Background}"
+                                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                                    CornerRadius="{TemplateBinding CornerRadius}"
+                                                                    MinWidth="{DynamicResource ComboBoxThemeMinWidth}" />
+                                                            <Border x:Name="HighlightBackground"
+                                                                    Grid.Column="0"
+                                                                    Grid.ColumnSpan="2"
+                                                                    Background="{DynamicResource ComboBoxBackgroundUnfocused}"
+                                                                    BorderBrush="{DynamicResource ComboBoxBackgroundBorderBrushUnfocused}"
+                                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                                    CornerRadius="{TemplateBinding CornerRadius}"
+                                                                    IsVisible="False" />
+
+                                                            <Border x:Name="DropDownOverlay"
+                                                                    Grid.Column="1"
+                                                                    Background="Transparent"
+                                                                    Margin="0,1,1,1"
+                                                                    Width="30"
+                                                                    IsVisible="False"
+                                                                    HorizontalAlignment="Right" />
+
+                                                            <PathIcon x:Name="DropDownGlyph"
+                                                                      Grid.Column="1"
+                                                                      UseLayoutRounding="False"
+                                                                      IsHitTestVisible="False"
+                                                                      Height="12"
+                                                                      Width="12"
+                                                                      Margin="0,0,0,0"
+                                                                      HorizontalAlignment="Right"
+                                                                      VerticalAlignment="Center"
+                                                                      Foreground="#303846"
+                                                                      
+                                                                      Data="M1939 486L2029 576L1024 1581L19 576L109 486L1024 1401L1939 486Z" />
+
+                                                            <Popup Name="PART_Popup"
+                                                                   WindowManagerAddShadowHint="False"
+                                                                   IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
+                                                                   MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}"
+                                                                   MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                                                   PlacementTarget="Background"
+                                                                   IsLightDismissEnabled="True"
+                                                                   >
+                                                                <Border x:Name="PopupBorder"
+                                                                        Background="{DynamicResource ComboBoxDropDownBackground}"
+                                                                        BorderBrush="{DynamicResource ComboBoxDropDownBorderBrush}"
+                                                                        BorderThickness="{DynamicResource ComboBoxDropdownBorderThickness}"
+                                                                        Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
+                                                                        HorizontalAlignment="Stretch"
+                                                                        CornerRadius="{DynamicResource OverlayCornerRadius}">
+                                                                    <ScrollViewer
+                                                                        HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                                                                        VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
+                                                                        <ItemsPresenter Name="PART_ItemsPresenter"
+                                                                            Items="{TemplateBinding Items}"
+                                                                            Margin="{DynamicResource ComboBoxDropdownContentMargin}"
+                                                                            ItemsPanel="{TemplateBinding ItemsPanel}"
+                                                                            ItemTemplate="{TemplateBinding ItemTemplate}"
+                                                                            VirtualizationMode="{TemplateBinding VirtualizationMode}" />
+                                                                    </ScrollViewer>
+                                                                </Border>
+                                                            </Popup>
+                                                        </Grid>
+                                                    </DataValidationErrors>
+                                                </ControlTemplate>
+                                            </Setter>
+                                        </Style>
+                                        <Style Selector="ComboBox:pointerover /template/Border">
+                                            <Setter Property="Background" Value="Transparent" />
+                                        </Style>
+                                        <Style Selector="ComboBox /template/ContentPresenter#ContentPresenter">
+                                            <Setter Property="IsVisible" Value="False" />
+                                        </Style>
+                                    </ComboBox.Styles>
+                                    
                                 </ComboBox>
                                 <Border
                                     Margin="5,0,0,0"
@@ -296,7 +388,9 @@
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         FontSize="20"
-                                        Text="D">
+                                        Foreground="#69788e"
+                                        FontWeight="Medium"
+                                        Text="{Binding SelectedProfile[0]}">
 
                                     </TextBlock>
                                 </Border>
