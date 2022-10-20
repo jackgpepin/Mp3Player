@@ -517,8 +517,8 @@ namespace Mp3Player.ViewModels
             
             NewProfileCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                Profiles.Add(new ProfileViewModel(new Profile(){Name = NewProfileName}));
                 var profile = new Profile() {Name = NewProfileName, Id = Guid.NewGuid().ToString()};
+                Profiles.Add(new ProfileViewModel(profile));
                 profile.Save();
                 NewProfileName = string.Empty;
             });

@@ -328,8 +328,9 @@ namespace Mp3Player.ViewModels
             {
                 if (SelectedMusic == null) return;
                 if(SelectedMusic.IsNowPlaying) SelectedMusic.MPlayer.Stop();
-                Playlist.RemoveFile(SelectedMusic.PlaylistFile);
+                //Playlist.RemoveFile(SelectedMusic.PlaylistFile);
                 Playlist.Musics.Remove(SelectedMusic);
+                MainWindowViewModel.SelectedProfile.Update();
                 
             });
             RemoveAllCommand = ReactiveCommand.CreateFromTask(async () =>
