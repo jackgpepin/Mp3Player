@@ -97,7 +97,7 @@
                             MaxHeight="250"
                             Grid.Row="1"
                             SelectedItem="{Binding SelectedPlaylist}"
-                            Items="{Binding Playlists}"
+                            Items="{Binding SelectedProfile.Playlists}"
                             ContextRequested="Playlists_OnContextRequested">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>

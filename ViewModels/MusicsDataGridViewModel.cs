@@ -299,7 +299,8 @@ namespace Mp3Player.ViewModels
                 }
 
                 
-                Playlist.Save();
+                //Playlist.Save();
+                MainWindowViewModel.SelectedProfile.Update();
 
                 //SelectedPlayingMusic = musics.First();
                 //SelectedPlayingMusic.Play();
@@ -318,8 +319,9 @@ namespace Mp3Player.ViewModels
                         Playlist._playlist.PlaylistFiles.Add(playlistFile);
                         Playlist.Musics.Add(new MusicViewModel(playlistFile, _libVlc));
                     }
-                    
-                    Playlist.Save();
+                    MainWindowViewModel.SelectedProfile.Update();
+                    //Playlist.Save();
+                    Console.WriteLine("Music added");
                 }
             });
             RemoveCommand = ReactiveCommand.CreateFromTask(async () =>
@@ -357,7 +359,7 @@ namespace Mp3Player.ViewModels
                 {
                     Playlist.Musics.Add(music);
                 }
-                
+
 
             });
             CopyFileToPlaylistCommand = ReactiveCommand.Create((string playlistName) =>

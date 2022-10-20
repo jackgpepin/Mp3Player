@@ -39,6 +39,13 @@ public class Database: IDatabase
     {
         _writeProfiles(profiles);
     }
+
+    public void UpdateProfile(Profile profile)
+    {
+        var profiles = GetProfiles();
+        profiles[profiles.FindIndex(p => p.Id == profile.Id)] = profile;
+        _writeProfiles(profiles);
+    }
     private void _writeProfiles(List<Profile> profiles)
     {
         if (!File.Exists("profiles.json"))

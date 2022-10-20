@@ -298,7 +298,6 @@ namespace Mp3Player.ViewModels
         public MainWindowViewModel()
         {
             var settings = Settings.Initialize();
-            _loadProfiles();
             Main = this;
             var args = Environment.GetCommandLineArgs();
             try
@@ -311,8 +310,10 @@ namespace Mp3Player.ViewModels
             }
             catch (Exception e)
             {
-                
+                Console.WriteLine(e.Message);
+                Debug.WriteLine(e.Message);
             }
+            _loadProfiles();
             _initializePlaylists();
             LoopMode = LoopMode.RepeatAll;
             Console.WriteLine("");
@@ -468,8 +469,9 @@ namespace Mp3Player.ViewModels
                 {
                     playlist.Musics.Add(new MusicViewModel(file, _libVlc));
                 }
-                Playlists.Add(playlist);
-                
+                SelectedProfile.Playlists.Add(playlist);
+                SelectedProfile.Update();
+
             });
             ShowOpenFileDialog = new Interaction<Unit, string[]>();
             ShowNewPlaylistWindow = new Interaction<NewPlaylistWindowViewModel, PlaylistViewModel>();
@@ -535,8 +537,23 @@ namespace Mp3Player.ViewModels
             _profilesList = profiles;
             foreach (var profile in profiles)
             {
-                Profiles.Add(new ProfileViewModel(profile));
+                var profileViewModel = new ProfileViewModel(profile);
+                foreach (var playlist in profileViewModel.Playlists)
+                {
+                    //playlist.Musics = new ObservableCollection<MusicViewModel>();
+                    foreach (var file in playlist._playlist.PlaylistFiles)
+                    {
+                        playlist.Musics.Add(new MusicViewModel(file, _libVlc));
+                    }
+                    playlist.Content = new MusicsDataGridViewModel(playlist, this);
+                }
+                Profiles.Add(profileViewModel);
+                
             }
+
+            SelectedProfile = Profiles.First();
+            //PlaylistContent = SelectedPlaylist.Content;
+
         }
         private void _shuffleMusic()
         {

@@ -9,6 +9,7 @@ public interface IDatabase
     public List<Playlist> GetPlaylists();
     public List<Profile> GetProfiles();
     public void SaveProfiles(List<Profile> profiles);
+    public void UpdateProfile(Profile profile);
     public void CreateProfile(Profile profile);
     public void DeleteProfile(Profile profile);
     public void StorePlaylist(Playlist playlist);

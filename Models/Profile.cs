@@ -26,6 +26,12 @@ public class Profile
         database.CreateProfile(this);
     }
 
+    public void Update()
+    {
+        IDatabase database = new Database();
+        database.UpdateProfile(this);
+    }
+    
     public void Delete()
     {
         IDatabase database = new Database();
