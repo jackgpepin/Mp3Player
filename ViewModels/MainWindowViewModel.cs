@@ -68,6 +68,7 @@ namespace Mp3Player.ViewModels
             set
             {
                 this.RaiseAndSetIfChanged(ref _position, value);
+                if (SelectedPlayingMusic == null) return;
                 if (Position != SelectedPlayingMusic.MPlayer.Position)
                     SelectedPlayingMusic.MPlayer.Position = Position;
             }
@@ -131,6 +132,7 @@ namespace Mp3Player.ViewModels
                 if(SelectedPlayingMusic != null && SelectedPlayingMusic.MPlayer.IsPlaying)
                     SelectedPlayingMusic.MPlayer.Stop();
                 this.RaiseAndSetIfChanged(ref _selectedPlayingMusic, value);
+                if (SelectedPlayingMusic == null) return;
                 if (SelectedPlayingMusic != null)
                 {
                     SelectedPlayingMusic.MPlayer.Mute = Muted;
@@ -284,7 +286,25 @@ namespace Mp3Player.ViewModels
         public ProfileViewModel SelectedProfile
         {
             get => _selectedProfile;
-            set => this.RaiseAndSetIfChanged(ref _selectedProfile, value);
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _selectedProfile, value);
+                if (SelectedProfile != null)
+                {
+                    SelectedPlaylist = null;
+                    PlaylistContent = null;
+                    Musics = new ObservableCollection<MusicViewModel>();
+                    SelectedPlayingMusic = null;
+                    SelectedMusic = null;
+                    TotalDuration = new Timer();
+                    ActualTime = new Timer();
+                    Position = 0;
+                    if (SelectedProfile.Playlists?.Count != 0)
+                    {
+                        SelectedPlaylist = SelectedProfile.Playlists.First();
+                    }
+                }
+            }
         }
 
         private string _newProfileName;
@@ -527,6 +547,7 @@ namespace Mp3Player.ViewModels
                 if (p.Id == "0000") return;
                 Profiles.Remove(p);
                 p.Delete();
+                
             });
         }
 
