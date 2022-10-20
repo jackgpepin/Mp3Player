@@ -62,8 +62,7 @@ namespace Mp3Player.ViewModels
         
         private float _position;
         public float Position
-        {                
-
+        {
             get => _position;
             set
             {

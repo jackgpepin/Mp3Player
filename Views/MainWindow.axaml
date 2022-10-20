@@ -359,11 +359,20 @@
                                                                     <StackPanel Orientation="Vertical">
                                                                         <Grid ColumnDefinitions="*,50">
                                                                             <TextBox 
+                                                                                BorderThickness="0,0,0,1"
+                                                                                Background="Transparent"
                                                                                 Text="{Binding NewProfileName}"
                                                                             Watermark="New profile"></TextBox>
                                                                             <Button 
                                                                                 Grid.Column="1"
-                                                                                Content="Save" Command="{Binding NewProfileCommand}"></Button>
+                                                                                Content="Save" Command="{Binding NewProfileCommand}">
+                                                                                <Button.Styles>
+                                                                                    <Style Selector="Button">
+                                                                                        <Setter Property="Background" Value="Transparent"/>
+                                                                                        <Setter Property="Cursor" Value="Hand"/>
+                                                                                    </Style>
+                                                                                </Button.Styles>
+                                                                            </Button>
                                                                         </Grid>
                                                                         <ScrollViewer
                                                                             HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
@@ -406,6 +415,7 @@
                                                                               VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                                                               Padding="{TemplateBinding Padding}" />
                                                             <Button 
+                                                                
                                                                 ZIndex="3"
                                                                 HorizontalAlignment="Right"
                                                                 Content="X"
