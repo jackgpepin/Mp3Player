@@ -272,28 +272,33 @@ namespace Mp3Player.ViewModels
             set => this.RaiseAndSetIfChanged(ref _equalizerWindowViewModel, value);
         }
 
-        private ObservableCollection<string> _profiles = new ObservableCollection<string>()
-        {
-            "Default",
-            "Denilson",
-            "Party"
-        };
-        public ObservableCollection<string> Profiles
+        private ObservableCollection<ProfileViewModel> _profiles;
+        public ObservableCollection<ProfileViewModel> Profiles
         {
             get => _profiles;
             set => this.RaiseAndSetIfChanged(ref _profiles, value);
         }
 
-        private string _selectedProfile;
+        private ProfileViewModel _selectedProfile;
 
-        public string SelectedProfile
+        public ProfileViewModel SelectedProfile
         {
             get => _selectedProfile;
             set => this.RaiseAndSetIfChanged(ref _selectedProfile, value);
         }
+
+        private string _newProfileName;
+
+        public string NewProfileName
+        {
+            get => _newProfileName;
+            set => this.RaiseAndSetIfChanged(ref _newProfileName, value);
+        }
+        private List<Profile> _profilesList;
         public MainWindowViewModel()
         {
             var settings = Settings.Initialize();
+            _loadProfiles();
             Main = this;
             var args = Environment.GetCommandLineArgs();
             try
@@ -507,8 +512,32 @@ namespace Mp3Player.ViewModels
             {
                 await ShowEqualizerDialog.Handle(EqualizerWindowViewModel);
             });
+            
+            NewProfileCommand = ReactiveCommand.CreateFromTask(async () =>
+            {
+                Profiles.Add(new ProfileViewModel(new Profile(){Name = NewProfileName}));
+                var profile = new Profile() {Name = NewProfileName, Id = Guid.NewGuid().ToString()};
+                profile.Save();
+                NewProfileName = string.Empty;
+            });
+            DeleteProfileCommand = ReactiveCommand.Create((ProfileViewModel p) =>
+            {
+                if (p.Id == "0000") return;
+                Profiles.Remove(p);
+                p.Delete();
+            });
         }
 
+        private void _loadProfiles()
+        {
+            Profiles = new ObservableCollection<ProfileViewModel>();
+            var profiles = Profile.GetProfiles();
+            _profilesList = profiles;
+            foreach (var profile in profiles)
+            {
+                Profiles.Add(new ProfileViewModel(profile));
+            }
+        }
         private void _shuffleMusic()
         {
             var index = Random.Shared.NextInt64((long) Musics.Count - 1);
@@ -586,7 +615,9 @@ namespace Mp3Player.ViewModels
         public ReactiveCommand<Unit, Unit> PreviousCommand { get; set; }
         public ReactiveCommand<Unit, Unit> NextCommand { get; set; }
         public ReactiveCommand<Unit, Unit> AddMusicCommand { get; set; }
-        
+        public ReactiveCommand<Unit, Unit> NewProfileCommand { get; set; }
+        public ReactiveCommand<ProfileViewModel, Unit> DeleteProfileCommand { get; set; }
+
         public ReactiveCommand<Unit, Unit> ChangeLoopModeCommand { get; set; }
         public ReactiveCommand<Unit, Unit> ToggleShuffleCommand { get; set; }
         public ReactiveCommand<Unit, Unit> ToggleMutedCommand { get; set; }

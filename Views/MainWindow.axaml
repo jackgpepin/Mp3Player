@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:Mp3Player.ViewModels"
+        xmlns:local="using:Mp3Player.Views"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:bhv="clr-namespace:Mp3Player.Behaviors"
@@ -290,10 +291,13 @@
                                     VerticalAlignment="Center"
                                     PlaceholderText="Denny"
                                     Cursor="Hand"
-                                    Items="{Binding Profiles}"
                                     SelectedItem="{Binding SelectedProfile}"
+                                    Width="200"
+                                    Items="{Binding Profiles}"
                                     >
+                                    
                                     <ComboBox.Styles>
+                                        
                                         <Style Selector="ComboBox">
                                             <Setter Property="Template">
                                                 <ControlTemplate>
@@ -352,16 +356,26 @@
                                                                         Padding="{DynamicResource ComboBoxDropdownBorderPadding}"
                                                                         HorizontalAlignment="Stretch"
                                                                         CornerRadius="{DynamicResource OverlayCornerRadius}">
-                                                                    <ScrollViewer
-                                                                        HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
-                                                                        VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
-                                                                        <ItemsPresenter Name="PART_ItemsPresenter"
-                                                                            Items="{TemplateBinding Items}"
-                                                                            Margin="{DynamicResource ComboBoxDropdownContentMargin}"
-                                                                            ItemsPanel="{TemplateBinding ItemsPanel}"
-                                                                            ItemTemplate="{TemplateBinding ItemTemplate}"
-                                                                            VirtualizationMode="{TemplateBinding VirtualizationMode}" />
-                                                                    </ScrollViewer>
+                                                                    <StackPanel Orientation="Vertical">
+                                                                        <Grid ColumnDefinitions="*,50">
+                                                                            <TextBox 
+                                                                                Text="{Binding NewProfileName}"
+                                                                            Watermark="New profile"></TextBox>
+                                                                            <Button 
+                                                                                Grid.Column="1"
+                                                                                Content="Save" Command="{Binding NewProfileCommand}"></Button>
+                                                                        </Grid>
+                                                                        <ScrollViewer
+                                                                            HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                                                                            VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
+                                                                            <ItemsPresenter Name="PART_ItemsPresenter"
+                                                                                Items="{TemplateBinding Items}"
+                                                                                Margin="{DynamicResource ComboBoxDropdownContentMargin}"
+                                                                                ItemsPanel="{TemplateBinding ItemsPanel}"
+                                                                                ItemTemplate="{TemplateBinding ItemTemplate}"
+                                                                                VirtualizationMode="{TemplateBinding VirtualizationMode}" />
+                                                                        </ScrollViewer>
+                                                                    </StackPanel>
                                                                 </Border>
                                                             </Popup>
                                                         </Grid>
@@ -375,9 +389,36 @@
                                         <Style Selector="ComboBox /template/ContentPresenter#ContentPresenter">
                                             <Setter Property="IsVisible" Value="False" />
                                         </Style>
+                                        
+                                        <Style Selector="ComboBoxItem">
+                                            <Setter Property="Template">
+                                                    <ControlTemplate>
+                                                        <Panel >
+                                                            <ContentPresenter Name="PART_ContentPresenter"
+                                                                              ZIndex="2"
+                                                                              Background="{TemplateBinding Background}"
+                                                                              BorderBrush="{TemplateBinding BorderBrush}"
+                                                                              BorderThickness="{TemplateBinding BorderThickness}"
+                                                                              CornerRadius="{TemplateBinding CornerRadius}"
+                                                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                                              Content="{Binding Content.Name, RelativeSource={RelativeSource TemplatedParent}}"
+                                                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                                              Padding="{TemplateBinding Padding}" />
+                                                            <Button 
+                                                                ZIndex="3"
+                                                                HorizontalAlignment="Right"
+                                                                Content="X"
+                                                                Command="{Binding $parent[Window].DataContext.DeleteProfileCommand}"
+                                                                CommandParameter="{TemplateBinding Content}"
+                                                                />
+                                                        </Panel>
+                                                    </ControlTemplate>
+                                            </Setter>
+                                        </Style>
                                     </ComboBox.Styles>
-                                    
                                 </ComboBox>
+                                
                                 <Border
                                     Margin="5,0,0,0"
                                     CornerRadius="100"
@@ -390,7 +431,7 @@
                                         FontSize="20"
                                         Foreground="#69788e"
                                         FontWeight="Medium"
-                                        Text="{Binding SelectedProfile[0]}">
+                                        Text="{Binding SelectedProfile.Name[0]}">
 
                                     </TextBlock>
                                 </Border>

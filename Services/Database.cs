@@ -11,6 +11,48 @@ namespace Mp3Player.Services;
 public class Database: IDatabase
 {
     public readonly string _dbPath = "playlists.json";
+
+    public List<Profile> GetProfiles()
+    {
+        var profiles = new List<Profile>();
+        
+        if(!File.Exists("profiles.json"))
+            _initializeProfilesFile();
+        profiles = JsonSerializer.Deserialize<List<Profile>>(File.ReadAllText("profiles.json"));
+        return profiles;
+    }
+
+    public void CreateProfile(Profile profile)
+    {
+        var profiles = GetProfiles();
+        profiles.Add(profile);
+        _writeProfiles(profiles);
+    }
+
+    public void DeleteProfile(Profile profile)
+    {
+        var profiles = GetProfiles();
+        profiles.Remove(profiles.First(pr => pr.Id == profile.Id));
+        _writeProfiles(profiles);
+    }
+    public void SaveProfiles(List<Profile> profiles)
+    {
+        _writeProfiles(profiles);
+    }
+    private void _writeProfiles(List<Profile> profiles)
+    {
+        if (!File.Exists("profiles.json"))
+            _initializeProfilesFile();
+        var jsonContent = JsonSerializer.Serialize(profiles);
+        File.WriteAllText("profiles.json", jsonContent);
+    }
+
+    private void _initializeProfilesFile()
+    {
+        var jsonContent = JsonSerializer.Serialize(new List<Profile>(){new Profile(){Name = "Default", Id = "0000"}});
+        File.WriteAllText("profiles.json", jsonContent);
+        
+    }
     public List<Playlist> GetPlaylists()
     {
         if (!File.Exists(_dbPath))
