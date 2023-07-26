@@ -506,7 +506,7 @@
                 <StackPanel Height="40" HorizontalAlignment="Stretch">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Button Background="Transparent" Command="{Binding PreviousCommand}">
-                            <Image Width="20" Source="/Assets/prev2.png"></Image>
+                            <Image Width="20" Source="/Assets/Back_Transparent.png"></Image>
                         </Button>
                         <Button Background="Transparent" Command="{Binding PlayCommand}">
                             <Image Width="20"
@@ -515,7 +515,7 @@
                         </Button>
 
                         <Button Background="Transparent" Command="{Binding NextCommand}">
-                            <Image Width="20" Source="/Assets/next2.png"></Image>
+                            <Image Width="20" Source="/Assets/Skip_Transparent.png"></Image>
                         </Button>
                     </StackPanel>
 
