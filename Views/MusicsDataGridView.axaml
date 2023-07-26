@@ -109,17 +109,17 @@
                             </Border>
                     </DataTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn 
+                <DataGridTemplateColumn
                     Width="*"
                     Header="Artist">
                     <DataTemplate>
-                            <TextBlock
-                                VerticalAlignment="Center"
-                                Foreground="{Binding IsNowPlaying, Converter={StaticResource ActualPlayingMusicBackgroundConverter}}"
-                                Text="{Binding Artist}"/>
+						<TextBlock
+                             VerticalAlignment="Center"
+                             Foreground="{Binding IsNowPlaying, Converter={StaticResource ActualPlayingMusicBackgroundConverter}}"
+                             Text="{Binding Artist}"/>
                     </DataTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn 
+                <!--<DataGridTemplateColumn 
                     Width="*"
                     Header="Album">
                     <DataTemplate>
@@ -128,7 +128,7 @@
                                 Foreground="{Binding IsNowPlaying, Converter={StaticResource ActualPlayingMusicBackgroundConverter}}"
                                 Text="{Binding Album}"/>
                     </DataTemplate>
-                </DataGridTemplateColumn>
+                </DataGridTemplateColumn>-->
 
                 <DataGridTemplateColumn
                     Width="100">

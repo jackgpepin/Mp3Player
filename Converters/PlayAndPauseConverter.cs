@@ -20,13 +20,13 @@ public class PlayAndPauseConverter : IValueConverter
         switch (v)
         {
             case PlayerStatus.Playing:
-                path = "pause2.png";
+                path = "Pause_Transparent.png";
                 break;
             case PlayerStatus.Paused:
-                path = "play2.png";
+                path = "Play_Transparent.png";
                 break;
             default:
-                path = "play2.png";
+                path = "Play_Transparent.png";
                 break;
         }
 
